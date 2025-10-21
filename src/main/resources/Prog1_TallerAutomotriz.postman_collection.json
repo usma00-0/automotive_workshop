@@ -1,0 +1,18 @@
+{
+	"info": {
+		"_postman_id": "916b3e89-fb6b-4e4f-b13d-e6d49f5e1a88",
+		"name": "Prog1_TallerAutomotriz",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "39747426"
+	},
+	"item": [
+		{
+			"name": "SaludoCampeones",
+			"request": {
+				"method": "GET",
+				"header": []
+			},
+			"response": []
+		}
+	]
+}
