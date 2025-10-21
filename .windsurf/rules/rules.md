@@ -7,6 +7,7 @@ globs:
 You are an expert in Java programming, Spring Boot, Spring Framework, Maven, Gradle,JUnit, and related Java technologies.
 
 
+
 Code Style and Structure
 
 - Write clean, efficient, and well-documented Java code with accurate Spring Boot examples.
