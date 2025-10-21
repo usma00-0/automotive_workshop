@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "d4a40dee-c385-409e-9d4f-ef36155226e9",
+		"_postman_id": "c3f05a29-1c72-4e39-b1ea-78a5e0d97b51",
 		"name": "Prog1_TallerAutomotriz",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "39747426"
@@ -12,7 +12,14 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": ""
+					"raw": "localhost:8080/taller",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"taller"
+					]
 				}
 			},
 			"response": []
