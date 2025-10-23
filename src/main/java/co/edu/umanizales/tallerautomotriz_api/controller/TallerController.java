@@ -10,6 +10,6 @@ import org.springframework.web.bind.annotation.RestController;
 public class TallerController {
     @GetMapping
     public String getHello(){
-        return "Hola Campeones";
+        return "Hola Campeones y campeonas";
     }
 }
