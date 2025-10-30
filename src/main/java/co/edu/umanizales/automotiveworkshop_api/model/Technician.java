@@ -1,4 +1,4 @@
-package co.edu.umanizales.tallerautomotriz_api.model;
+package co.edu.umanizales.automotiveworkshop_api.model;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -11,7 +11,7 @@ import java.util.List;
  */
 @Data
 @EqualsAndHashCode(callSuper = true)
-public class Technician extends Person {
+public abstract class Technician extends Person {
     private String technicianId;
     private List<String> specializations;
     private int experienceYears;

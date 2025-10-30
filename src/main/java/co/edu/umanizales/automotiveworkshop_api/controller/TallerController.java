@@ -1,4 +1,4 @@
-package co.edu.umanizales.tallerautomotriz_api.controller;
+package co.edu.umanizales.automotiveworkshop_api.controller;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;

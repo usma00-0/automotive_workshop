@@ -1,4 +1,4 @@
-package co.edu.umanizales.tallerautomotriz_api;
+package co.edu.umanizales.automotiveworkshop_api;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

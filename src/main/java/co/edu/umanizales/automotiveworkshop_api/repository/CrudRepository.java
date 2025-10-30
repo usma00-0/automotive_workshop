@@ -1,4 +1,4 @@
-package co.edu.umanizales.tallerautomotriz_api.repository;
+package co.edu.umanizales.automotiveworkshop_api.repository;
 
 import java.util.List;
 import java.util.Optional;

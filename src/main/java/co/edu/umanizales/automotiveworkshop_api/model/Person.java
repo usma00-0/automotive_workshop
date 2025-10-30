@@ -1,4 +1,4 @@
-package co.edu.umanizales.tallerautomotriz_api.model;
+package co.edu.umanizales.automotiveworkshop_api.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

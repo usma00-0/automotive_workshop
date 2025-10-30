@@ -9,7 +9,7 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>co.edu.umanizales</groupId>
-    <artifactId>tallerautomotriz_api</artifactId>
+    <artifactId>automotiveworkshop_api</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>tallerautomotriz_api</name>
     <description>tallerautomotriz_api</description>

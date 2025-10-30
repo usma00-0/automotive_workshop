@@ -1,7 +1,7 @@
-package co.edu.umanizales.tallerautomotriz_api.controller;
+package co.edu.umanizales.automotiveworkshop_api.controller;
 
-import co.edu.umanizales.tallerautomotriz_api.model.Client;
-import co.edu.umanizales.tallerautomotriz_api.service.ClientService;
+import co.edu.umanizales.automotiveworkshop_api.model.Client;
+import co.edu.umanizales.automotiveworkshop_api.service.ClientService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

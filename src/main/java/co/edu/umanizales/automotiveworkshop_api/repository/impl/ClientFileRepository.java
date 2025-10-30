@@ -1,8 +1,8 @@
-package co.edu.umanizales.tallerautomotriz_api.repository.impl;
+package co.edu.umanizales.automotiveworkshop_api.repository.impl;
 
-import co.edu.umanizales.tallerautomotriz_api.model.Client;
-import co.edu.umanizales.tallerautomotriz_api.repository.CrudRepository;
-import co.edu.umanizales.tallerautomotriz_api.repository.FilePersistence;
+import co.edu.umanizales.automotiveworkshop_api.model.Client;
+import co.edu.umanizales.automotiveworkshop_api.repository.CrudRepository;
+import co.edu.umanizales.automotiveworkshop_api.repository.FilePersistence;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;

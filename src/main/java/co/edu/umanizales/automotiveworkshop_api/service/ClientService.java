@@ -1,7 +1,7 @@
-package co.edu.umanizales.tallerautomotriz_api.service;
+package co.edu.umanizales.automotiveworkshop_api.service;
 
-import co.edu.umanizales.tallerautomotriz_api.model.Client;
-import co.edu.umanizales.tallerautomotriz_api.repository.CrudRepository;
+import co.edu.umanizales.automotiveworkshop_api.model.Client;
+import co.edu.umanizales.automotiveworkshop_api.repository.CrudRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
