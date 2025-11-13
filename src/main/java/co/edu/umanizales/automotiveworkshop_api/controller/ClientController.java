@@ -3,65 +3,80 @@ package co.edu.umanizales.automotiveworkshop_api.controller;
 import co.edu.umanizales.automotiveworkshop_api.model.Client;
 import co.edu.umanizales.automotiveworkshop_api.service.ClientService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 /**
- * REST Controller for handling Client-related operations.
+ * Controlador REST simple para gestionar Client usando una lista en memoria.
+ * Endpoints CRUD básicos y respuestas sencillas (sin ResponseEntity).
  */
 @RestController
-@RequestMapping("/api/clients")
+@RequestMapping("/api/v1/clients")
 public class ClientController {
 
     private final ClientService clientService;
 
+    /**
+     * Inyección del servicio mediante constructor.
+     */
     @Autowired
     public ClientController(ClientService clientService) {
         this.clientService = clientService;
     }
 
-    @PostMapping
-    public ResponseEntity<Client> createClient(@RequestBody Client client) {
-        Client savedClient = clientService.saveClient(client);
-        return new ResponseEntity<>(savedClient, HttpStatus.CREATED);
-    }
-
-    @GetMapping("/{id}")
-    public ResponseEntity<Client> getClient(@PathVariable String id) {
-        return clientService.getClientById(id)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
-    }
-
+    /**
+     * Lista todos los clientes.
+     * GET /api/v1/clients
+     */
     @GetMapping
-    public ResponseEntity<List<Client>> getAllClients() {
-        return ResponseEntity.ok(clientService.getAllClients());
+    public List<Client> listAll() {
+        return clientService.listAll();
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<Client> updateClient(
-            @PathVariable String id,
-            @RequestBody Client client) {
-        try {
-            Client updatedClient = clientService.updateClient(id, client);
-            return ResponseEntity.ok(updatedClient);
-        } catch (IllegalStateException e) {
-            return ResponseEntity.notFound().build();
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().build();
+    /**
+     * Busca un cliente por su ID lógico (clientId).
+     * GET /api/v1/clients/{id}
+     */
+    @GetMapping("/{id}")
+    public Client findById(@PathVariable String id) {
+        return clientService.findById(id);
+    }
+
+    /**
+     * Agrega un nuevo cliente si su clientId no existe.
+     * POST /api/v1/clients
+     */
+    @PostMapping
+    public String addClient(@RequestBody Client client) {
+        boolean added = clientService.addClient(client);
+        if (added) {
+            return "Client added successfully";
+        } else {
+            return "Client could not be added (null or id already exists)";
         }
     }
 
+    /**
+     * Actualiza los datos de un cliente identificado por clientId.
+     * PUT /api/v1/clients/{id}
+     */
+    @PutMapping("/{id}")
+    public Client updateClient(@PathVariable String id, @RequestBody Client client) {
+        return clientService.updateClient(id, client);
+    }
+
+    /**
+     * Elimina un cliente por clientId.
+     * DELETE /api/v1/clients/{id}
+     */
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteClient(@PathVariable String id) {
-        try {
-            clientService.deleteClient(id);
-            return ResponseEntity.noContent().build();
-        } catch (IllegalStateException e) {
-            return ResponseEntity.notFound().build();
+    public String deleteClient(@PathVariable String id) {
+        boolean removed = clientService.deleteById(id);
+        if (removed) {
+            return "Client deleted successfully";
+        } else {
+            return "Client not found";
         }
     }
 }

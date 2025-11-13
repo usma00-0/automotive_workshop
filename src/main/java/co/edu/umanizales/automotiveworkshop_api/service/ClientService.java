@@ -1,63 +1,104 @@
 package co.edu.umanizales.automotiveworkshop_api.service;
 
 import co.edu.umanizales.automotiveworkshop_api.model.Client;
-import co.edu.umanizales.automotiveworkshop_api.repository.CrudRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 /**
- * Service class for handling business logic related to Clients.
+ * Servicio en memoria para gestionar Client con una lista interna.
+ * Lógica simple y didáctica usando for-each e if.
  */
 @Service
 public class ClientService {
 
-    private final CrudRepository<Client, String> clientRepository;
+    private final List<Client> clients;
 
-    @Autowired
-    public ClientService(@Qualifier("clientRepository") CrudRepository<Client, String> clientRepository) {
-        this.clientRepository = clientRepository;
+    /**
+     * Constructor por defecto que inicializa la lista.
+     */
+    public ClientService() {
+        this.clients = new ArrayList<>();
     }
 
-    public Client saveClient(Client client) {
-        // Validate client data before saving
-        if (client == null || client.getClientId() == null || client.getClientId().trim().isEmpty()) {
-            throw new IllegalArgumentException("Client ID is required");
+    /**
+     * Agrega un cliente si su clientId no existe aún.
+     * @param client cliente a agregar
+     * @return true si se agregó, false si no fue posible
+     */
+    public boolean addClient(Client client) {
+        if (client == null || client.getClientId() == null) {
+            return false;
         }
-        
-        // Check if client already exists
-        if (clientRepository.existsById(client.getClientId())) {
-            throw new IllegalStateException("Client with ID " + client.getClientId() + " already exists");
+        Client existing = findById(client.getClientId());
+        if (existing != null) {
+            return false;
         }
-        
-        return clientRepository.save(client);
+        clients.add(client);
+        return true;
     }
 
-    public Optional<Client> getClientById(String id) {
-        return clientRepository.findById(id);
+    /**
+     * Lista todos los clientes.
+     */
+    public List<Client> listAll() {
+        return clients;
     }
 
-    public List<Client> getAllClients() {
-        return clientRepository.findAll();
+    /**
+     * Busca un cliente por su clientId recorriendo la lista.
+     */
+    public Client findById(String id) {
+        if (id == null) {
+            return null;
+        }
+        for (Client c : clients) {
+            if (id.equalsIgnoreCase(c.getClientId())) {
+                return c;
+            }
+        }
+        return null;
     }
 
-    public void deleteClient(String id) {
-        if (!clientRepository.existsById(id)) {
-            throw new IllegalStateException("Client with ID " + id + " not found");
+    /**
+     * Actualiza los datos de un cliente identificado por clientId.
+     */
+    public Client updateClient(String id, Client updated) {
+        if (id == null || updated == null) {
+            return null;
         }
-        clientRepository.deleteById(id);
+        for (Client c : clients) {
+            if (id.equalsIgnoreCase(c.getClientId())) {
+                // Datos heredados de Person
+                c.setId(updated.getId());
+                c.setName(updated.getName());
+                c.setEmail(updated.getEmail());
+                c.setPhone(updated.getPhone());
+                c.setAddress(updated.getAddress());
+                // Específicos de Client
+                c.setActive(updated.isActive());
+                c.setVehicleInfo(updated.getVehicleInfo());
+                return c;
+            }
+        }
+        return null;
     }
 
-    public Client updateClient(String id, Client client) {
-        if (!clientRepository.existsById(id)) {
-            throw new IllegalStateException("Client with ID " + id + " not found");
+    /**
+     * Elimina un cliente por clientId recorriendo la lista.
+     */
+    public boolean deleteById(String id) {
+        if (id == null) {
+            return false;
         }
-        if (!id.equals(client.getClientId())) {
-            throw new IllegalArgumentException("Client ID in path does not match client ID in body");
+        for (int i = 0; i < clients.size(); i++) {
+            Client c = clients.get(i);
+            if (id.equalsIgnoreCase(c.getClientId())) {
+                clients.remove(i);
+                return true;
+            }
         }
-        return clientRepository.save(client);
+        return false;
     }
 }

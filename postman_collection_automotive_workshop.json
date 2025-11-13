@@ -1,0 +1,189 @@
+{
+  "info": {
+    "name": "Automotive Workshop API (In-Memory)",
+    "_postman_id": "96c6a5a1-79e5-4c45-bdef-8a2d3410c0b1",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": "Colección para probar la API en memoria (Model–Service–Controller) con listas internas."
+  },
+  "variable": [
+    { "key": "baseUrl", "value": "http://localhost:8080" }
+  ],
+  "item": [
+    {
+      "name": "cars",
+      "item": [
+        {
+          "name": "01-List cars",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/v1/cars", "host": ["{{baseUrl}}"], "path": ["api","v1","cars"] }
+          }
+        },
+        {
+          "name": "02-Add car",
+          "request": {
+            "method": "POST",
+            "header": [ {"key":"Content-Type","value":"application/json"} ],
+            "body": { "mode": "raw", "raw": "{\n  \"licensePlate\": \"ABC123\",\n  \"brand\": \"Toyota\",\n  \"modelYear\": 2020,\n  \"color\": \"Rojo\",\n  \"ownerId\": \"C001\",\n  \"category\": { \"name\": \"Particular\", \"description\": \"Uso personal\" },\n  \"numberOfDoors\": 4,\n  \"fuelType\": \"gasolina\"\n}" },
+            "url": { "raw": "{{baseUrl}}/api/v1/cars", "host": ["{{baseUrl}}"], "path": ["api","v1","cars"] }
+          }
+        },
+        {
+          "name": "03-Get car by plate",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/v1/cars/find/ABC123", "host": ["{{baseUrl}}"], "path": ["api","v1","cars","find","ABC123"] }
+          }
+        },
+        {
+          "name": "04-Update car",
+          "request": {
+            "method": "PUT",
+            "header": [ {"key":"Content-Type","value":"application/json"} ],
+            "body": { "mode": "raw", "raw": "{\n  \"licensePlate\": \"ABC123\",\n  \"brand\": \"Toyota\",\n  \"modelYear\": 2020,\n  \"color\": \"Azul\",\n  \"ownerId\": \"C001\",\n  \"category\": { \"name\": \"Particular\", \"description\": \"Uso personal\" },\n  \"numberOfDoors\": 4,\n  \"fuelType\": \"gasolina\"\n}" },
+            "url": { "raw": "{{baseUrl}}/api/v1/cars/ABC123", "host": ["{{baseUrl}}"], "path": ["api","v1","cars","ABC123"] }
+          }
+        },
+        {
+          "name": "05-Delete car",
+          "request": {
+            "method": "DELETE",
+            "url": { "raw": "{{baseUrl}}/api/v1/cars/ABC123", "host": ["{{baseUrl}}"], "path": ["api","v1","cars","ABC123"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "vehicles",
+      "item": [
+        {
+          "name": "01-List vehicles",
+          "request": { "method": "GET", "url": { "raw": "{{baseUrl}}/api/v1/vehicles", "host": ["{{baseUrl}}"], "path": ["api","v1","vehicles"] } }
+        },
+        {
+          "name": "02-Add vehicle",
+          "request": {
+            "method": "POST",
+            "header": [ {"key":"Content-Type","value":"application/json"} ],
+            "body": { "mode": "raw", "raw": "{\n  \"licensePlate\": \"XYZ987\",\n  \"brand\": \"Kia\",\n  \"modelYear\": 2022,\n  \"color\": \"Negro\",\n  \"ownerId\": \"C002\",\n  \"category\": { \"name\": \"Comercial\", \"description\": \"Uso de trabajo\" }\n}" },
+            "url": { "raw": "{{baseUrl}}/api/v1/vehicles", "host": ["{{baseUrl}}"], "path": ["api","v1","vehicles"] }
+          }
+        },
+        {
+          "name": "03-Find vehicle by plate",
+          "request": { "method": "GET", "url": { "raw": "{{baseUrl}}/api/v1/vehicles/find/XYZ987", "host": ["{{baseUrl}}"], "path": ["api","v1","vehicles","find","XYZ987"] } }
+        },
+        {
+          "name": "04-Update vehicle",
+          "request": {
+            "method": "PUT",
+            "header": [ {"key":"Content-Type","value":"application/json"} ],
+            "body": { "mode": "raw", "raw": "{\n  \"licensePlate\": \"XYZ987\",\n  \"brand\": \"Kia\",\n  \"modelYear\": 2022,\n  \"color\": \"Blanco\",\n  \"ownerId\": \"C002\",\n  \"category\": { \"name\": \"Comercial\", \"description\": \"Uso de trabajo\" }\n}" },
+            "url": { "raw": "{{baseUrl}}/api/v1/vehicles/XYZ987", "host": ["{{baseUrl}}"], "path": ["api","v1","vehicles","XYZ987"] }
+          }
+        },
+        {
+          "name": "05-Delete vehicle",
+          "request": { "method": "DELETE", "url": { "raw": "{{baseUrl}}/api/v1/vehicles/XYZ987", "host": ["{{baseUrl}}"], "path": ["api","v1","vehicles","XYZ987"] } }
+        }
+      ]
+    },
+    {
+      "name": "clients",
+      "item": [
+        { "name": "01-List clients", "request": { "method": "GET", "url": { "raw": "{{baseUrl}}/api/v1/clients", "host": ["{{baseUrl}}"], "path": ["api","v1","clients"] } } },
+        { "name": "02-Add client", "request": { "method": "POST", "header": [ {"key":"Content-Type","value":"application/json"} ], "body": { "mode": "raw", "raw": "{\n  \"id\": \"P100\",\n  \"name\": \"Ana Perez\",\n  \"email\": \"ana@example.com\",\n  \"phone\": \"3001234567\",\n  \"address\": \"Calle 10 #5-20\",\n  \"clientId\": \"C001\",\n  \"active\": true,\n  \"vehicleInfo\": \"Toyota Corolla 2020\"\n}" }, "url": { "raw": "{{baseUrl}}/api/v1/clients", "host": ["{{baseUrl}}"], "path": ["api","v1","clients"] } } },
+        { "name": "03-Get client by id", "request": { "method": "GET", "url": { "raw": "{{baseUrl}}/api/v1/clients/C001", "host": ["{{baseUrl}}"], "path": ["api","v1","clients","C001"] } } },
+        { "name": "04-Update client", "request": { "method": "PUT", "header": [ {"key":"Content-Type","value":"application/json"} ], "body": { "mode": "raw", "raw": "{\n  \"id\": \"P100\",\n  \"name\": \"Ana Perez\",\n  \"email\": \"ana@example.com\",\n  \"phone\": \"3001234567\",\n  \"address\": \"Calle 10 #5-20\",\n  \"clientId\": \"C001\",\n  \"active\": false,\n  \"vehicleInfo\": \"Toyota Corolla 2020\"\n}" }, "url": { "raw": "{{baseUrl}}/api/v1/clients/C001", "host": ["{{baseUrl}}"], "path": ["api","v1","clients","C001"] } } },
+        { "name": "05-Delete client", "request": { "method": "DELETE", "url": { "raw": "{{baseUrl}}/api/v1/clients/C001", "host": ["{{baseUrl}}"], "path": ["api","v1","clients","C001"] } } }
+      ]
+    },
+    {
+      "name": "employees",
+      "item": [
+        { "name": "01-List employees", "request": { "method": "GET", "url": { "raw": "{{baseUrl}}/api/v1/employees", "host": ["{{baseUrl}}"], "path": ["api","v1","employees"] } } },
+        { "name": "02-Add employee", "request": { "method": "POST", "header": [ {"key":"Content-Type","value":"application/json"} ], "body": { "mode": "raw", "raw": "{\n  \"id\": \"P200\",\n  \"name\": \"Luis Gomez\",\n  \"email\": \"luis@example.com\",\n  \"phone\": \"3007654321\",\n  \"address\": \"Av 5 #20-10\",\n  \"employeeId\": \"E001\",\n  \"position\": \"Asesor\",\n  \"salary\": 2500000,\n  \"hireDate\": \"2024-01-15\",\n  \"active\": true\n}" }, "url": { "raw": "{{baseUrl}}/api/v1/employees", "host": ["{{baseUrl}}"], "path": ["api","v1","employees"] } } },
+        { "name": "03-Get employee by id", "request": { "method": "GET", "url": { "raw": "{{baseUrl}}/api/v1/employees/E001", "host": ["{{baseUrl}}"], "path": ["api","v1","employees","E001"] } } },
+        { "name": "04-Update employee", "request": { "method": "PUT", "header": [ {"key":"Content-Type","value":"application/json"} ], "body": { "mode": "raw", "raw": "{\n  \"id\": \"P200\",\n  \"name\": \"Luis Gomez\",\n  \"email\": \"luis@example.com\",\n  \"phone\": \"3007654321\",\n  \"address\": \"Av 5 #20-10\",\n  \"employeeId\": \"E001\",\n  \"position\": \"Asesor Senior\",\n  \"salary\": 3000000,\n  \"hireDate\": \"2024-01-15\",\n  \"active\": true\n}" }, "url": { "raw": "{{baseUrl}}/api/v1/employees/E001", "host": ["{{baseUrl}}"], "path": ["api","v1","employees","E001"] } } },
+        { "name": "05-Delete employee", "request": { "method": "DELETE", "url": { "raw": "{{baseUrl}}/api/v1/employees/E001", "host": ["{{baseUrl}}"], "path": ["api","v1","employees","E001"] } } }
+      ]
+    },
+    {
+      "name": "mechanics",
+      "item": [
+        { "name": "01-List mechanics", "request": { "method": "GET", "url": { "raw": "{{baseUrl}}/api/v1/mechanics", "host": ["{{baseUrl}}"], "path": ["api","v1","mechanics"] } } },
+        { "name": "02-Add mechanic", "request": { "method": "POST", "header": [ {"key":"Content-Type","value":"application/json"} ], "body": { "mode": "raw", "raw": "{\n  \"id\": \"P300\",\n  \"name\": \"Carlos Ruiz\",\n  \"email\": \"carlos@example.com\",\n  \"phone\": \"3015555555\",\n  \"address\": \"Calle 50 #30-10\",\n  \"technicianId\": \"T001\",\n  \"specializations\": [\"motor\", \"frenos\"],\n  \"experienceYears\": 5,\n  \"available\": true,\n  \"hourlyRate\": 80000.0,\n  \"specialty\": \"motor\"\n}" }, "url": { "raw": "{{baseUrl}}/api/v1/mechanics", "host": ["{{baseUrl}}"], "path": ["api","v1","mechanics"] } } },
+        { "name": "03-Get mechanic by id", "request": { "method": "GET", "url": { "raw": "{{baseUrl}}/api/v1/mechanics/T001", "host": ["{{baseUrl}}"], "path": ["api","v1","mechanics","T001"] } } },
+        { "name": "04-Update mechanic", "request": { "method": "PUT", "header": [ {"key":"Content-Type","value":"application/json"} ], "body": { "mode": "raw", "raw": "{\n  \"id\": \"P300\",\n  \"name\": \"Carlos Ruiz\",\n  \"email\": \"carlos@example.com\",\n  \"phone\": \"3015555555\",\n  \"address\": \"Calle 50 #30-10\",\n  \"technicianId\": \"T001\",\n  \"specializations\": [\"motor\", \"frenos\"],\n  \"experienceYears\": 6,\n  \"available\": true,\n  \"hourlyRate\": 90000.0,\n  \"specialty\": \"transmisión\"\n}" }, "url": { "raw": "{{baseUrl}}/api/v1/mechanics/T001", "host": ["{{baseUrl}}"], "path": ["api","v1","mechanics","T001"] } } },
+        { "name": "05-Delete mechanic", "request": { "method": "DELETE", "url": { "raw": "{{baseUrl}}/api/v1/mechanics/T001", "host": ["{{baseUrl}}"], "path": ["api","v1","mechanics","T001"] } } }
+      ]
+    },
+    {
+      "name": "replacements",
+      "item": [
+        { "name": "01-List replacements", "request": { "method": "GET", "url": { "raw": "{{baseUrl}}/api/v1/replacements", "host": ["{{baseUrl}}"], "path": ["api","v1","replacements"] } } },
+        { "name": "02-Add replacement", "request": { "method": "POST", "header": [ {"key":"Content-Type","value":"application/json"} ], "body": { "mode": "raw", "raw": "{\n  \"code\": \"R001\",\n  \"name\": \"Filtro de aceite\",\n  \"description\": \"Filtro OEM\",\n  \"quantity\": 2,\n  \"unitPrice\": 35000.0\n}" }, "url": { "raw": "{{baseUrl}}/api/v1/replacements", "host": ["{{baseUrl}}"], "path": ["api","v1","replacements"] } } },
+        { "name": "03-Get replacement by code", "request": { "method": "GET", "url": { "raw": "{{baseUrl}}/api/v1/replacements/R001", "host": ["{{baseUrl}}"], "path": ["api","v1","replacements","R001"] } } },
+        { "name": "04-Update replacement", "request": { "method": "PUT", "header": [ {"key":"Content-Type","value":"application/json"} ], "body": { "mode": "raw", "raw": "{\n  \"code\": \"R001\",\n  \"name\": \"Filtro de aceite premium\",\n  \"description\": \"Filtro OEM mejorado\",\n  \"quantity\": 3,\n  \"unitPrice\": 42000.0\n}" }, "url": { "raw": "{{baseUrl}}/api/v1/replacements/R001", "host": ["{{baseUrl}}"], "path": ["api","v1","replacements","R001"] } } },
+        { "name": "05-Delete replacement", "request": { "method": "DELETE", "url": { "raw": "{{baseUrl}}/api/v1/replacements/R001", "host": ["{{baseUrl}}"], "path": ["api","v1","replacements","R001"] } } }
+      ]
+    },
+    {
+      "name": "services-performed",
+      "item": [
+        { "name": "01-List services-performed", "request": { "method": "GET", "url": { "raw": "{{baseUrl}}/api/v1/services-performed", "host": ["{{baseUrl}}"], "path": ["api","v1","services-performed"] } } },
+        { "name": "02-Add service-performed", "request": { "method": "POST", "header": [ {"key":"Content-Type","value":"application/json"} ], "body": { "mode": "raw", "raw": "{\n  \"code\": \"S001\",\n  \"name\": \"Cambio de aceite\",\n  \"description\": \"Incluye mano de obra\",\n  \"hours\": 1.5,\n  \"hourlyRate\": 70000.0\n}" }, "url": { "raw": "{{baseUrl}}/api/v1/services-performed", "host": ["{{baseUrl}}"], "path": ["api","v1","services-performed"] } } },
+        { "name": "03-Get service-performed by code", "request": { "method": "GET", "url": { "raw": "{{baseUrl}}/api/v1/services-performed/S001", "host": ["{{baseUrl}}"], "path": ["api","v1","services-performed","S001"] } } },
+        { "name": "04-Update service-performed", "request": { "method": "PUT", "header": [ {"key":"Content-Type","value":"application/json"} ], "body": { "mode": "raw", "raw": "{\n  \"code\": \"S001\",\n  \"name\": \"Cambio de aceite y filtro\",\n  \"description\": \"Incluye mano de obra y filtro\",\n  \"hours\": 2.0,\n  \"hourlyRate\": 75000.0\n}" }, "url": { "raw": "{{baseUrl}}/api/v1/services-performed/S001", "host": ["{{baseUrl}}"], "path": ["api","v1","services-performed","S001"] } } },
+        { "name": "05-Delete service-performed", "request": { "method": "DELETE", "url": { "raw": "{{baseUrl}}/api/v1/services-performed/S001", "host": ["{{baseUrl}}"], "path": ["api","v1","services-performed","S001"] } } }
+      ]
+    },
+    {
+      "name": "orders",
+      "item": [
+        { "name": "01-List orders", "request": { "method": "GET", "url": { "raw": "{{baseUrl}}/api/v1/orders", "host": ["{{baseUrl}}"], "path": ["api","v1","orders"] } } },
+        { "name": "02-Add order", "request": { "method": "POST", "header": [ {"key":"Content-Type","value":"application/json"} ], "body": { "mode": "raw", "raw": "{\n  \"id\": \"O001\",\n  \"clientId\": \"C001\",\n  \"vehiclePlate\": \"ABC123\",\n  \"technicianId\": \"T001\",\n  \"createdAt\": \"2025-11-12T10:00:00\",\n  \"status\": \"OPEN\",\n  \"parts\": [ { \"code\": \"R001\", \"name\": \"Filtro de aceite\", \"description\": \"Filtro OEM\", \"quantity\": 1, \"unitPrice\": 35000.0 } ],\n  \"services\": [ { \"code\": \"S001\", \"name\": \"Cambio de aceite\", \"description\": \"Incluye mano de obra\", \"hours\": 1.5, \"hourlyRate\": 70000.0 } ],\n  \"notes\": \"Cliente espera en sala\"\n}" }, "url": { "raw": "{{baseUrl}}/api/v1/orders", "host": ["{{baseUrl}}"], "path": ["api","v1","orders"] } } },
+        { "name": "03-Get order by id", "request": { "method": "GET", "url": { "raw": "{{baseUrl}}/api/v1/orders/O001", "host": ["{{baseUrl}}"], "path": ["api","v1","orders","O001"] } } },
+        { "name": "04-Update order", "request": { "method": "PUT", "header": [ {"key":"Content-Type","value":"application/json"} ], "body": { "mode": "raw", "raw": "{\n  \"id\": \"O001\",\n  \"clientId\": \"C001\",\n  \"vehiclePlate\": \"ABC123\",\n  \"technicianId\": \"T001\",\n  \"createdAt\": \"2025-11-12T10:00:00\",\n  \"status\": \"IN_PROGRESS\",\n  \"parts\": [ { \"code\": \"R001\", \"name\": \"Filtro de aceite\", \"description\": \"Filtro OEM\", \"quantity\": 1, \"unitPrice\": 35000.0 } ],\n  \"services\": [ { \"code\": \"S001\", \"name\": \"Cambio de aceite\", \"description\": \"Incluye mano de obra\", \"hours\": 1.5, \"hourlyRate\": 70000.0 } ],\n  \"notes\": \"Agregadas observaciones\"\n}" }, "url": { "raw": "{{baseUrl}}/api/v1/orders/O001", "host": ["{{baseUrl}}"], "path": ["api","v1","orders","O001"] } } },
+        { "name": "05-Delete order", "request": { "method": "DELETE", "url": { "raw": "{{baseUrl}}/api/v1/orders/O001", "host": ["{{baseUrl}}"], "path": ["api","v1","orders","O001"] } } }
+      ]
+    },
+    {
+      "name": "bills",
+      "item": [
+        { "name": "01-List bills", "request": { "method": "GET", "url": { "raw": "{{baseUrl}}/api/v1/bills", "host": ["{{baseUrl}}"], "path": ["api","v1","bills"] } } },
+        { "name": "02-Add bill", "request": { "method": "POST", "header": [ {"key":"Content-Type","value":"application/json"} ], "body": { "mode": "raw", "raw": "{\n  \"id\": \"B001\",\n  \"orderId\": \"O001\",\n  \"issuedAt\": \"2025-11-12T12:30:00\",\n  \"subtotalParts\": 35000.0,\n  \"subtotalServices\": 105000.0,\n  \"taxes\": 22400.0,\n  \"total\": 162400.0,\n  \"paymentType\": \"EFECTIVO\"\n}" }, "url": { "raw": "{{baseUrl}}/api/v1/bills", "host": ["{{baseUrl}}"], "path": ["api","v1","bills"] } } },
+        { "name": "03-Get bill by id", "request": { "method": "GET", "url": { "raw": "{{baseUrl}}/api/v1/bills/B001", "host": ["{{baseUrl}}"], "path": ["api","v1","bills","B001"] } } },
+        { "name": "04-Update bill", "request": { "method": "PUT", "header": [ {"key":"Content-Type","value":"application/json"} ], "body": { "mode": "raw", "raw": "{\n  \"id\": \"B001\",\n  \"orderId\": \"O001\",\n  \"issuedAt\": \"2025-11-12T13:00:00\",\n  \"subtotalParts\": 35000.0,\n  \"subtotalServices\": 105000.0,\n  \"taxes\": 25000.0,\n  \"total\": 165000.0,\n  \"paymentType\": \"TARJETA\"\n}" }, "url": { "raw": "{{baseUrl}}/api/v1/bills/B001", "host": ["{{baseUrl}}"], "path": ["api","v1","bills","B001"] } } },
+        { "name": "05-Delete bill", "request": { "method": "DELETE", "url": { "raw": "{{baseUrl}}/api/v1/bills/B001", "host": ["{{baseUrl}}"], "path": ["api","v1","bills","B001"] } } }
+      ]
+    },
+    {
+      "name": "vehicle-categories",
+      "item": [
+        { "name": "01-List categories", "request": { "method": "GET", "url": { "raw": "{{baseUrl}}/api/v1/vehicle-categories", "host": ["{{baseUrl}}"], "path": ["api","v1","vehicle-categories"] } } },
+        { "name": "02-Add category", "request": { "method": "POST", "header": [ {"key":"Content-Type","value":"application/json"} ], "body": { "mode": "raw", "raw": "{\n  \"name\": \"Particular\",\n  \"description\": \"Uso personal\"\n}" }, "url": { "raw": "{{baseUrl}}/api/v1/vehicle-categories", "host": ["{{baseUrl}}"], "path": ["api","v1","vehicle-categories"] } } },
+        { "name": "03-Get category by name", "request": { "method": "GET", "url": { "raw": "{{baseUrl}}/api/v1/vehicle-categories/Particular", "host": ["{{baseUrl}}"], "path": ["api","v1","vehicle-categories","Particular"] } } },
+        { "name": "04-Update category", "request": { "method": "PUT", "header": [ {"key":"Content-Type","value":"application/json"} ], "body": { "mode": "raw", "raw": "{\n  \"name\": \"Particular\",\n  \"description\": \"Uso personal familiar\"\n}" }, "url": { "raw": "{{baseUrl}}/api/v1/vehicle-categories/Particular", "host": ["{{baseUrl}}"], "path": ["api","v1","vehicle-categories","Particular"] } } },
+        { "name": "05-Delete category", "request": { "method": "DELETE", "url": { "raw": "{{baseUrl}}/api/v1/vehicle-categories/Particular", "host": ["{{baseUrl}}"], "path": ["api","v1","vehicle-categories","Particular"] } } }
+      ]
+    },
+    {
+      "name": "enums",
+      "item": [
+        { "name": "payment-types list", "request": { "method": "GET", "url": { "raw": "{{baseUrl}}/api/v1/payment-types", "host": ["{{baseUrl}}"], "path": ["api","v1","payment-types"] } } },
+        { "name": "payment-types find", "request": { "method": "GET", "url": { "raw": "{{baseUrl}}/api/v1/payment-types/EFECTIVO", "host": ["{{baseUrl}}"], "path": ["api","v1","payment-types","EFECTIVO"] } } },
+        { "name": "vehicle-types list", "request": { "method": "GET", "url": { "raw": "{{baseUrl}}/api/v1/vehicle-types", "host": ["{{baseUrl}}"], "path": ["api","v1","vehicle-types"] } } },
+        { "name": "vehicle-types find", "request": { "method": "GET", "url": { "raw": "{{baseUrl}}/api/v1/vehicle-types/SEDAN", "host": ["{{baseUrl}}"], "path": ["api","v1","vehicle-types","SEDAN"] } } },
+        { "name": "service-status list", "request": { "method": "GET", "url": { "raw": "{{baseUrl}}/api/v1/service-status", "host": ["{{baseUrl}}"], "path": ["api","v1","service-status"] } } },
+        { "name": "service-status find", "request": { "method": "GET", "url": { "raw": "{{baseUrl}}/api/v1/service-status/PENDING", "host": ["{{baseUrl}}"], "path": ["api","v1","service-status","PENDING"] } } }
+      ]
+    },
+    {
+      "name": "taller",
+      "item": [
+        { "name": "hello", "request": { "method": "GET", "url": { "raw": "{{baseUrl}}/taller", "host": ["{{baseUrl}}"], "path": ["taller"] } } }
+      ]
+    }
+  ]
+}
