@@ -1,6 +1,8 @@
 package co.edu.umanizales.automotiveworkshop_api.service;
 
 import co.edu.umanizales.automotiveworkshop_api.model.Client;
+import co.edu.umanizales.automotiveworkshop_api.repository.CsvStorage;
+import jakarta.annotation.PostConstruct;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -14,12 +16,70 @@ import java.util.List;
 public class ClientService {
 
     private final List<Client> clients;
+    private static final String DATA_FILE = "clients.csv";
+    private final CsvStorage csv;
 
     /**
      * Constructor por defecto que inicializa la lista.
      */
     public ClientService() {
         this.clients = new ArrayList<>();
+        this.csv = new CsvStorage(DATA_FILE);
+    }
+
+    @PostConstruct
+    private void init() {
+        loadFromCsv();
+    }
+
+    private void loadFromCsv() {
+        List<String> lines = csv.readAllLines();
+        clients.clear();
+        for (int i = 0; i < lines.size(); i++) {
+            String line = lines.get(i);
+            if (line == null) {
+                continue;
+            }
+            String trimmed = line.trim();
+            if (trimmed.isEmpty()) {
+                continue;
+            }
+            if (trimmed.startsWith("clientId,")) {
+                continue;
+            }
+            String[] parts = trimmed.split(",", -1);
+            if (parts.length < 8) {
+                continue;
+            }
+            Client c = new Client();
+            c.setClientId(parts[0]);
+            c.setId(parts[1]);
+            c.setName(parts[2]);
+            c.setEmail(parts[3]);
+            c.setPhone(parts[4]);
+            c.setAddress(parts[5]);
+            c.setActive("true".equalsIgnoreCase(parts[6]));
+            c.setVehicleInfo(parts[7]);
+            clients.add(c);
+        }
+    }
+
+    private void saveToCsv() {
+        List<String> lines = new ArrayList<>();
+        lines.add("clientId,id,name,email,phone,address,active,vehicleInfo");
+        for (Client c : clients) {
+            StringBuilder sb = new StringBuilder();
+            sb.append(c.getClientId() == null ? "" : c.getClientId()).append(",")
+              .append(c.getId() == null ? "" : c.getId()).append(",")
+              .append(c.getName() == null ? "" : c.getName()).append(",")
+              .append(c.getEmail() == null ? "" : c.getEmail()).append(",")
+              .append(c.getPhone() == null ? "" : c.getPhone()).append(",")
+              .append(c.getAddress() == null ? "" : c.getAddress()).append(",")
+              .append(c.isActive()).append(",")
+              .append(c.getVehicleInfo() == null ? "" : c.getVehicleInfo());
+            lines.add(sb.toString());
+        }
+        csv.writeAllLines(lines);
     }
 
     /**
@@ -36,6 +96,7 @@ public class ClientService {
             return false;
         }
         clients.add(client);
+        saveToCsv();
         return true;
     }
 
@@ -79,6 +140,7 @@ public class ClientService {
                 // Específicos de Client
                 c.setActive(updated.isActive());
                 c.setVehicleInfo(updated.getVehicleInfo());
+                saveToCsv();
                 return c;
             }
         }
@@ -96,6 +158,7 @@ public class ClientService {
             Client c = clients.get(i);
             if (id.equalsIgnoreCase(c.getClientId())) {
                 clients.remove(i);
+                saveToCsv();
                 return true;
             }
         }

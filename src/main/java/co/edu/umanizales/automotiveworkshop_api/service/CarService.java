@@ -1,6 +1,9 @@
 package co.edu.umanizales.automotiveworkshop_api.service;
 
 import co.edu.umanizales.automotiveworkshop_api.model.Car;
+import co.edu.umanizales.automotiveworkshop_api.model.VehicleCategory;
+import co.edu.umanizales.automotiveworkshop_api.repository.CsvStorage;
+import jakarta.annotation.PostConstruct;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -14,12 +17,73 @@ import java.util.List;
 public class CarService {
 
     private final List<Car> cars;
+    private static final String DATA_FILE = "cars.csv";
+    private final CsvStorage csv;
 
     /**
      * Constructor por defecto que inicializa la lista.
      */
     public CarService() {
         this.cars = new ArrayList<>();
+        this.csv = new CsvStorage(DATA_FILE);
+    }
+
+    @PostConstruct
+    private void init() {
+        loadFromCsv();
+    }
+
+    private void loadFromCsv() {
+        List<String> lines = csv.readAllLines();
+        cars.clear();
+        for (int i = 0; i < lines.size(); i++) {
+            String line = lines.get(i);
+            if (line == null) {
+                continue;
+            }
+            String trimmed = line.trim();
+            if (trimmed.isEmpty()) {
+                continue;
+            }
+            if (trimmed.startsWith("licensePlate,")) {
+                continue;
+            }
+            String[] parts = trimmed.split(",", -1);
+            if (parts.length < 9) {
+                continue;
+            }
+            Car c = new Car();
+            c.setLicensePlate(parts[0]);
+            c.setBrand(parts[1]);
+            try { c.setModelYear(Integer.parseInt(parts[2])); } catch (Exception e) { c.setModelYear(0); }
+            c.setColor(parts[3]);
+            c.setOwnerId(parts[4]);
+            c.setCategory(new VehicleCategory(parts[5], parts[6]));
+            try { c.setNumberOfDoors(Integer.parseInt(parts[7])); } catch (Exception e) { c.setNumberOfDoors(0); }
+            c.setFuelType(parts[8]);
+            cars.add(c);
+        }
+    }
+
+    private void saveToCsv() {
+        List<String> lines = new ArrayList<>();
+        lines.add("licensePlate,brand,modelYear,color,ownerId,categoryName,categoryDescription,numberOfDoors,fuelType");
+        for (Car c : cars) {
+            String catName = c.getCategory() == null ? "" : c.getCategory().name();
+            String catDesc = c.getCategory() == null ? "" : c.getCategory().description();
+            StringBuilder sb = new StringBuilder();
+            sb.append(c.getLicensePlate() == null ? "" : c.getLicensePlate()).append(",")
+              .append(c.getBrand() == null ? "" : c.getBrand()).append(",")
+              .append(c.getModelYear()).append(",")
+              .append(c.getColor() == null ? "" : c.getColor()).append(",")
+              .append(c.getOwnerId() == null ? "" : c.getOwnerId()).append(",")
+              .append(catName == null ? "" : catName).append(",")
+              .append(catDesc == null ? "" : catDesc).append(",")
+              .append(c.getNumberOfDoors()).append(",")
+              .append(c.getFuelType() == null ? "" : c.getFuelType());
+            lines.add(sb.toString());
+        }
+        csv.writeAllLines(lines);
     }
 
     /**
@@ -36,6 +100,7 @@ public class CarService {
             return false;
         }
         cars.add(car);
+        saveToCsv();
         return true;
     }
 
@@ -84,6 +149,7 @@ public class CarService {
                 c.setCategory(updated.getCategory());
                 c.setNumberOfDoors(updated.getNumberOfDoors());
                 c.setFuelType(updated.getFuelType());
+                saveToCsv();
                 return c;
             }
         }
@@ -103,6 +169,7 @@ public class CarService {
             Car c = cars.get(i);
             if (plate.equalsIgnoreCase(c.getLicensePlate())) {
                 cars.remove(i);
+                saveToCsv();
                 return true;
             }
         }
