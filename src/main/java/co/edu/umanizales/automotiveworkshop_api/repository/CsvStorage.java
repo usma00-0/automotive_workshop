@@ -1,7 +1,5 @@
 package co.edu.umanizales.automotiveworkshop_api.repository;
 
-import org.springframework.core.io.ClassPathResource;
-
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
@@ -27,17 +25,7 @@ public class CsvStorage {
     }
 
     private File resolveDataFile() {
-        // Try to resolve using ClassPathResource (dev mode)
-        try {
-            ClassPathResource resource = new ClassPathResource("data/" + filename);
-            File f = resource.getFile();
-            if (f != null) {
-                return f;
-            }
-        } catch (Exception ignored) {
-            // Fall back to project-relative path below
-        }
-        // Fallback: project-relative folder
+        // Always use the project resources data folder so changes are visible in /src/main/resources/data
         return new File(DATA_FOLDER, filename);
     }
 

@@ -12,7 +12,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Repository("clientRepository")
 public class ClientFileRepository implements CrudRepository<Client, String> {
@@ -29,11 +28,13 @@ public class ClientFileRepository implements CrudRepository<Client, String> {
     private void loadData() {
         try {
             List<String> lines = filePersistence.readAllLines();
-            for (String line : lines) {
-                if (!line.trim().isEmpty()) {
-                    Client client = objectMapper.readValue(line, Client.class);
-                    clients.add(client);
-                }
+            for (int i = 0; i < lines.size(); i++) {
+                String raw = lines.get(i);
+                if (raw == null) { continue; }
+                String line = raw.trim();
+                if (line.isEmpty()) { continue; }
+                Client client = objectMapper.readValue(line, Client.class);
+                clients.add(client);
             }
         } catch (IOException e) {
             throw new RuntimeException("Error loading client data", e);
@@ -42,15 +43,12 @@ public class ClientFileRepository implements CrudRepository<Client, String> {
 
     private void saveData() {
         try {
-            List<String> lines = clients.stream()
-                    .map(client -> {
-                        try {
-                            return objectMapper.writeValueAsString(client);
-                        } catch (Exception e) {
-                            throw new RuntimeException("Error serializing client", e);
-                        }
-                    })
-                    .collect(Collectors.toList());
+            List<String> lines = new ArrayList<>();
+            for (int i = 0; i < clients.size(); i++) {
+                Client c = clients.get(i);
+                String json = objectMapper.writeValueAsString(c);
+                lines.add(json);
+            }
             filePersistence.saveAllLines(lines);
         } catch (Exception e) {
             throw new RuntimeException("Error saving client data", e);
@@ -59,7 +57,20 @@ public class ClientFileRepository implements CrudRepository<Client, String> {
 
     @Override
     public Client save(Client client) {
-        clients.removeIf(c -> c.getClientId().equals(client.getClientId()));
+        if (client == null || client.getClientId() == null) {
+            return client;
+        }
+        int indexFound = -1;
+        for (int i = 0; i < clients.size(); i++) {
+            Client c = clients.get(i);
+            if (client.getClientId().equals(c.getClientId())) {
+                indexFound = i;
+                break;
+            }
+        }
+        if (indexFound >= 0) {
+            clients.remove(indexFound);
+        }
         clients.add(client);
         saveData();
         return client;
@@ -67,9 +78,16 @@ public class ClientFileRepository implements CrudRepository<Client, String> {
 
     @Override
     public Optional<Client> findById(String id) {
-        return clients.stream()
-                .filter(client -> client.getClientId().equals(id))
-                .findFirst();
+        if (id == null) {
+            return Optional.empty();
+        }
+        for (int i = 0; i < clients.size(); i++) {
+            Client c = clients.get(i);
+            if (id.equals(c.getClientId())) {
+                return Optional.of(c);
+            }
+        }
+        return Optional.empty();
     }
 
     @Override
@@ -79,12 +97,30 @@ public class ClientFileRepository implements CrudRepository<Client, String> {
 
     @Override
     public void deleteById(String id) {
-        clients.removeIf(client -> client.getClientId().equals(id));
+        if (id == null) {
+            return;
+        }
+        for (int i = 0; i < clients.size(); i++) {
+            Client c = clients.get(i);
+            if (id.equals(c.getClientId())) {
+                clients.remove(i);
+                break;
+            }
+        }
         saveData();
     }
 
     @Override
     public boolean existsById(String id) {
-        return clients.stream().anyMatch(client -> client.getClientId().equals(id));
+        if (id == null) {
+            return false;
+        }
+        for (int i = 0; i < clients.size(); i++) {
+            Client c = clients.get(i);
+            if (id.equals(c.getClientId())) {
+                return true;
+            }
+        }
+        return false;
     }
 }

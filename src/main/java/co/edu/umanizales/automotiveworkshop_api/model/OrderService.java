@@ -24,11 +24,29 @@ public class OrderService {
     private String notes;
 
     public double getTotalParts() {
-        return parts == null ? 0d : parts.stream().mapToDouble(Replacement::getTotal).sum();
+        if (parts == null) {
+            return 0d;
+        }
+        double total = 0d;
+        for (Replacement r : parts) {
+            if (r != null) {
+                total += r.getTotal();
+            }
+        }
+        return total;
     }
 
     public double getTotalServices() {
-        return services == null ? 0d : services.stream().mapToDouble(ServicePerformed::getTotal).sum();
+        if (services == null) {
+            return 0d;
+        }
+        double total = 0d;
+        for (ServicePerformed s : services) {
+            if (s != null) {
+                total += s.getTotal();
+            }
+        }
+        return total;
     }
 
     public double getTotal() {
