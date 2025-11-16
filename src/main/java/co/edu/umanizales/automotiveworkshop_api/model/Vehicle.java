@@ -18,8 +18,9 @@ public class Vehicle {
     private String brand;
     private int modelYear;
     private String color;
-    private String ownerId;
+    private Client owner;
     private VehicleCategory category;
+    private VehicleType type;
 
     /**
      * Starts the vehicle's engine.

@@ -11,7 +11,7 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = true)
 public class Car extends Vehicle {
     private int numberOfDoors;
-    private String fuelType; // e.g., gasoline, diesel, electric, hybrid
+    private FuelType fuelType;
 
     /**
      * No-args constructor required by frameworks and tools, and for simple instantiation.
@@ -27,8 +27,9 @@ public class Car extends Vehicle {
      * @param brand Vehicle brand/manufacturer
      * @param modelYear Vehicle model year
      * @param color Vehicle color
-     * @param ownerId Owner identifier
+     * @param owner Owner
      * @param category Vehicle category (e.g., private, commercial)
+     * @param type Vehicle type (e.g., SEDAN, SUV)
      * @param numberOfDoors Number of doors the car has
      * @param fuelType Fuel type the car uses
      */
@@ -36,11 +37,12 @@ public class Car extends Vehicle {
                String brand,
                int modelYear,
                String color,
-               String ownerId,
+               Client owner,
                VehicleCategory category,
+               VehicleType type,
                int numberOfDoors,
-               String fuelType) {
-        super(licensePlate, brand, modelYear, color, ownerId, category);
+               FuelType fuelType) {
+        super(licensePlate, brand, modelYear, color, owner, category, type);
         this.numberOfDoors = numberOfDoors;
         this.fuelType = fuelType;
     }

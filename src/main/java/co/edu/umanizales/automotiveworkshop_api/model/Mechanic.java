@@ -6,5 +6,5 @@ import lombok.EqualsAndHashCode;
 @Data
 @EqualsAndHashCode(callSuper = true)
 public class Mechanic extends Technician {
-    private String specialty; // e.g., engine, transmission
+    private MechanicSpecialty specialty;
 }

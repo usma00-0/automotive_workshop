@@ -2,6 +2,7 @@ package co.edu.umanizales.automotiveworkshop_api.model;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import java.util.List;
 
 /**
  * Represents a client in the automotive workshop system.
@@ -12,5 +13,5 @@ import lombok.EqualsAndHashCode;
 public class Client extends Person {
     private String clientId;
     private boolean active;
-    private String vehicleInfo;
+    private List<Vehicle> vehicles;
 }

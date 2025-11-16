@@ -13,7 +13,7 @@ import java.time.LocalDate;
 @EqualsAndHashCode(callSuper = true)
 public class Employee extends Person {
     private String employeeId;
-    private String position;
+    private JobPosition position;
     private double salary;
     private LocalDate hireDate;
     private boolean active;

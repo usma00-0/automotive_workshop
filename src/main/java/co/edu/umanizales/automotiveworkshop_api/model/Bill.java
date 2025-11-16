@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class Bill {
     private String id;
-    private String orderId;
+    private OrderService order;
     private LocalDateTime issuedAt;
     private double subtotalParts;
     private double subtotalServices;

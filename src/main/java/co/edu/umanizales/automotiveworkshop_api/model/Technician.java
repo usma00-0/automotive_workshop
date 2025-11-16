@@ -13,7 +13,7 @@ import java.util.List;
 @EqualsAndHashCode(callSuper = true)
 public abstract class Technician extends Person {
     private String technicianId;
-    private List<String> specializations;
+    private List<TechnicianSkill> specializations;
     private int experienceYears;
     private boolean available;
     private double hourlyRate;

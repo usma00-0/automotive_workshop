@@ -14,11 +14,11 @@ import java.util.List;
 @AllArgsConstructor
 public class OrderService {
     private String id;
-    private String clientId; // reference to Client
-    private String vehiclePlate; // association to Vehicle by plate
-    private String technicianId; // reference to Technician
+    private Client client; // aggregation to Client
+    private Vehicle vehicle; // aggregation to Vehicle
+    private Technician technician; // aggregation to Technician
     private LocalDateTime createdAt;
-    private String status; // e.g., OPEN, IN_PROGRESS, CLOSED
+    private ServiceStatus status; // e.g., PENDING, IN_PROGRESS, COMPLETED
     private List<Replacement> parts;
     private List<ServicePerformed> services;
     private String notes;
