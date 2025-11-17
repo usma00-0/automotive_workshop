@@ -12,7 +12,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Servicio simple en memoria para gestionar Vehicle.
+ * Servicio de negocio para gestionar vehículos (Vehicle).
+ *
+ * Responsabilidades:
+ * - Cargar/guardar vehículos desde/hacia CSV usando una lista en memoria.
+ * - CRUD básico con ciclos simples.
+ * - Hidratación: al consultar, completar el propietario (owner: Client) a partir de su clientId.
  */
 @Service
 public class VehicleService {
@@ -23,7 +28,7 @@ public class VehicleService {
     private final ClientService clientService;
 
     /**
-     * Constructor por defecto que inicializa la lista.
+     * Constructor por defecto que inicializa la lista y dependencia para hidratar propietarios.
      */
     public VehicleService(ClientService clientService) {
         this.vehicles = new ArrayList<>();
@@ -36,6 +41,10 @@ public class VehicleService {
         loadFromCsv();
     }
 
+    /**
+     * Carga el contenido de vehicles.csv. Crea objetos Vehicle con referencias mínimas
+     * (owner con solo clientId). La hidratación completa se hace en lectura (GET).
+     */
     private void loadFromCsv() {
         List<String> lines = csv.readAllLines();
         vehicles.clear();
@@ -78,6 +87,10 @@ public class VehicleService {
         }
     }
 
+    /**
+     * Serializa los vehículos en memoria y guarda en CSV. Solo se persiste el clientId del owner
+     * para evitar duplicación de información.
+     */
     private void saveToCsv() {
         List<String> lines = new ArrayList<>();
         lines.add("licensePlate,brand,modelYear,color,ownerClientId,categoryName,categoryDescription,type");
@@ -103,6 +116,11 @@ public class VehicleService {
         csv.writeAllLines(lines);
     }
 
+    /**
+     * Hidrata un Vehicle completando su propietario a partir del clientId.
+     * @param v vehículo a hidratar
+     * @return vehículo con owner completo si existe
+     */
     private Vehicle hydrate(Vehicle v) {
         if (v == null) { return null; }
         if (v.getOwner() != null && v.getOwner().getClientId() != null) {
@@ -133,6 +151,10 @@ public class VehicleService {
     /**
      * Lista todos los vehículos.
      */
+    /**
+     * Lista todos los vehículos hidratados.
+     * @return lista de vehículos con owner completo cuando aplica
+     */
     public List<Vehicle> listAll() {
         List<Vehicle> result = new ArrayList<>();
         for (Vehicle v : vehicles) {
@@ -143,6 +165,11 @@ public class VehicleService {
 
     /**
      * Busca un vehículo por su placa recorriendo la lista.
+     */
+    /**
+     * Busca un vehículo por su placa.
+     * @param plate placa del vehículo
+     * @return vehículo hidratado o null si no existe
      */
     public Vehicle findByPlate(String plate) {
         if (plate == null) {

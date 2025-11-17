@@ -6,8 +6,9 @@ import lombok.EqualsAndHashCode;
 import java.time.LocalDate;
 
 /**
- * Represents an employee in the automotive workshop system.
- * Extends the base Person class.
+ * Representa un empleado del taller.
+ * Extiende de {@link Person} y agrega información laboral: cargo, salario,
+ * fecha de contratación y estado activo.
  */
 @Data
 @EqualsAndHashCode(callSuper = true)

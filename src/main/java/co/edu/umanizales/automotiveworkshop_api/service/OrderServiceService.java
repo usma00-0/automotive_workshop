@@ -16,7 +16,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Servicio simple en memoria para OrderService.
+ * Servicio de negocio para gestionar las órdenes de servicio (OrderService).
+ *
+ * Responsabilidades principales:
+ * - Cargar las órdenes desde CSV al iniciar la aplicación (memoria).
+ * - Exponer operaciones CRUD sobre una lista en memoria.
+ * - Persistir los cambios nuevamente en CSV.
+ * - Hidratación: al consultar, completar las referencias (client, vehicle, technician)
+ *   a partir de sus identificadores para devolver objetos ricos en la respuesta.
  */
 @Service
 public class OrderServiceService {
@@ -43,6 +50,11 @@ public class OrderServiceService {
         loadFromCsv();
     }
 
+    /**
+     * Carga el archivo CSV de órdenes y lo transforma en objetos OrderService mínimos.
+     * Nota: aquí solo se guardan referencias (clientId, plate, technicianId). La información
+     * completa se agrega luego mediante el proceso de "hidratación" en tiempo de lectura.
+     */
     private void loadFromCsv() {
         List<String> lines = csv.readAllLines();
         orders.clear();
@@ -113,6 +125,11 @@ public class OrderServiceService {
         }
     }
 
+    /**
+     * Serializa las órdenes en memoria y las guarda en el archivo CSV.
+     * - Las listas de repuestos/servicios se compactan en formato texto ("|" y ":").
+     * - Las referencias a otras entidades se almacenan por su identificador (clientId, placa, technicianId).
+     */
     private void saveToCsv() {
         List<String> lines = new ArrayList<>();
         lines.add("id,clientId,vehiclePlate,technicianId,createdAt,status,parts,services,notes");
@@ -165,6 +182,13 @@ public class OrderServiceService {
         csv.writeAllLines(lines);
     }
 
+    /**
+     * "Hidrata" una orden: usando los identificadores minimales (clientId, placa, technicianId)
+     * consulta en sus servicios correspondientes para completar los objetos anidados y
+     * así devolver respuestas con información completa.
+     * @param o orden a hidratar
+     * @return la misma orden con sus relaciones completadas (si existen)
+     */
     private OrderService hydrate(OrderService o) {
         if (o == null) { return null; }
         // Cliente completo
@@ -187,6 +211,8 @@ public class OrderServiceService {
 
     /**
      * Agrega una orden si su id no existe.
+     * @param order orden a agregar (debe traer un id no nulo y único)
+     * @return true si se agregó; false si es nula o el id ya existe
      */
     public boolean addOrder(OrderService order) {
         if (order == null || order.getId() == null) {
@@ -202,7 +228,8 @@ public class OrderServiceService {
     }
 
     /**
-     * Lista todas las órdenes de servicio.
+     * Lista todas las órdenes de servicio, ya hidratadas.
+     * @return lista de órdenes con relaciones completadas
      */
     public List<OrderService> listAll() {
         List<OrderService> result = new ArrayList<>();
@@ -213,7 +240,9 @@ public class OrderServiceService {
     }
 
     /**
-     * Busca una orden por id.
+     * Busca una orden por id y la retorna hidratada.
+     * @param id identificador de la orden
+     * @return la orden encontrada o null si no existe
      */
     public OrderService findById(String id) {
         if (id == null) {
@@ -228,7 +257,10 @@ public class OrderServiceService {
     }
 
     /**
-     * Actualiza una orden por id.
+     * Actualiza una orden por id (no modifica el id).
+     * @param id identificador a localizar
+     * @param updated nueva información de la orden
+     * @return la orden actualizada o null si no se encontró
      */
     public OrderService updateOrder(String id, OrderService updated) {
         if (id == null || updated == null) {
@@ -252,7 +284,9 @@ public class OrderServiceService {
     }
 
     /**
-     * Elimina una orden por id.
+     * Elimina una orden por id si existe.
+     * @param id identificador de la orden
+     * @return true si se eliminó; false si no existía
      */
     public boolean deleteById(String id) {
         if (id == null) {

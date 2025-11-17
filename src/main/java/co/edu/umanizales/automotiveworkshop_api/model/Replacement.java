@@ -5,6 +5,10 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+/**
+ * Representa un repuesto utilizado en una orden.
+ * Incluye cantidad y precio unitario para calcular su subtotal.
+ */
 @Data
 @Builder
 @NoArgsConstructor
@@ -16,6 +20,9 @@ public class Replacement {
     private int quantity;
     private double unitPrice;
 
+    /**
+     * Subtotal del repuesto: cantidad x precio unitario.
+     */
     public double getTotal() {
         return quantity * unitPrice;
     }

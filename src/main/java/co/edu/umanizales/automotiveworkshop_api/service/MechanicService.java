@@ -12,7 +12,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Servicio simple en memoria para Mechanic.
+ * Servicio de negocio para gestionar mecánicos (Mechanic).
+ *
+ * Responsabilidades:
+ * - Cargar y guardar mecánicos usando CSV y una lista en memoria.
+ * - Exponer operaciones CRUD con ciclos simples (for/for-each) sin streams.
+ * - Serializar/deserializar listas de habilidades (specializations) como texto separado por '|'.
  */
 @Service
 public class MechanicService {
@@ -21,6 +26,9 @@ public class MechanicService {
     private static final String DATA_FILE = "mechanics.csv";
     private final CsvStorage csv;
 
+    /**
+     * Constructor por defecto que inicializa la lista y el acceso a CSV.
+     */
     public MechanicService() {
         this.mechanics = new ArrayList<>();
         this.csv = new CsvStorage(DATA_FILE);
@@ -31,6 +39,11 @@ public class MechanicService {
         loadFromCsv();
     }
 
+    /**
+     * Carga el contenido de mechanics.csv. Convierte cada línea en un objeto Mechanic.
+     * - Convierte enums desde texto (specialty y specializations).
+     * - Separa las habilidades por '|'.
+     */
     private void loadFromCsv() {
         List<String> lines = csv.readAllLines();
         mechanics.clear();
@@ -74,6 +87,10 @@ public class MechanicService {
         }
     }
 
+    /**
+     * Serializa la lista de mecánicos a mechanics.csv.
+     * - Convierte las habilidades (specializations) a texto unido por '|'.
+     */
     private void saveToCsv() {
         List<String> lines = new ArrayList<>();
         lines.add("technicianId,id,name,email,phone,street,city,state,postalCode,country,specialty,specializations,experienceYears,available,hourlyRate");
@@ -117,6 +134,8 @@ public class MechanicService {
 
     /**
      * Agrega un mecánico si su technicianId no existe.
+     * @param mechanic mecánico a agregar (debe traer technicianId no nulo)
+     * @return true si se agregó; false si es nulo o ya existía el id
      */
     public boolean addMechanic(Mechanic mechanic) {
         if (mechanic == null || mechanic.getTechnicianId() == null) {
@@ -133,6 +152,7 @@ public class MechanicService {
 
     /**
      * Lista todos los mecánicos.
+     * @return lista de mecánicos en memoria
      */
     public List<Mechanic> listAll() {
         return mechanics;
@@ -140,6 +160,11 @@ public class MechanicService {
 
     /**
      * Busca un mecánico por technicianId.
+     */
+    /**
+     * Busca un mecánico por technicianId.
+     * @param id identificador del técnico
+     * @return mecánico encontrado o null si no existe
      */
     public Mechanic findById(String id) {
         if (id == null) {
@@ -155,6 +180,12 @@ public class MechanicService {
 
     /**
      * Actualiza un mecánico por technicianId (no cambia el ID).
+     */
+    /**
+     * Actualiza un mecánico por technicianId (no cambia el ID).
+     * @param id technicianId a localizar
+     * @param updated datos nuevos
+     * @return mecánico actualizado o null si no existe
      */
     public Mechanic updateMechanic(String id, Mechanic updated) {
         if (id == null || updated == null) {
@@ -184,6 +215,8 @@ public class MechanicService {
 
     /**
      * Elimina un mecánico por technicianId.
+     * @param id identificador del técnico
+     * @return true si se eliminó, false en caso contrario
      */
     public boolean deleteById(String id) {
         if (id == null) {

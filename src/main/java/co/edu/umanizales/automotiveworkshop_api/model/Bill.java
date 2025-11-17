@@ -7,6 +7,11 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
+/**
+ * Representa una factura del taller.
+ * Contiene referencia a la orden asociada y los valores económicos
+ * (subtotales, impuestos, total) junto con el tipo de pago.
+ */
 @Data
 @Builder
 @NoArgsConstructor

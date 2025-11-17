@@ -6,8 +6,9 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
- * Base class for vehicles in the workshop.
- * Represents a generic vehicle with common attributes and behaviors.
+ * Entidad que representa un vehículo genérico del taller.
+ * Contiene atributos comunes (placa, marca, modelo, color) y relaciones con
+ * el propietario ({@link Client}), la categoría ({@link VehicleCategory}) y el tipo ({@link VehicleType}).
  */
 @Data
 @Builder
@@ -23,19 +24,19 @@ public class Vehicle {
     private VehicleType type;
 
     /**
-     * Starts the vehicle's engine.
-     * @return A message indicating the vehicle has started.
+     * Método de ejemplo: “encender” el vehículo.
+     * @return mensaje simple indicando que el vehículo se encendió
      */
     public String start() {
-        return "The " + brand + " with license plate " + licensePlate + " has started.";
+        return "El " + brand + " con placa " + licensePlate + " se ha encendido.";
     }
     
     /**
-     * Gets the vehicle's details.
-     * @return A string containing the vehicle's information.
+     * Devuelve una descripción corta del vehículo.
+     * @return cadena con información básica del vehículo
      */
     public String getDetails() {
-        return String.format("Vehicle: %s %s (Year: %d), License: %s, Color: %s", 
+        return String.format("Vehículo: %s %s (Año: %d), Placa: %s, Color: %s", 
                 brand, category != null ? category.name() : "N/A", modelYear, licensePlate, color);
     }
 }

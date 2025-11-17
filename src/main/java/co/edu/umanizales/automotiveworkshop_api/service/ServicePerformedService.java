@@ -9,7 +9,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Servicio simple en memoria para ServicePerformed.
+ * Servicio de negocio para gestionar servicios realizados (ServicePerformed).
+ *
+ * Responsabilidades:
+ * - Cargar/guardar desde/hacia CSV usando una lista en memoria.
+ * - Exponer operaciones CRUD y búsquedas con ciclos simples.
  */
 @Service
 public class ServicePerformedService {
@@ -18,6 +22,9 @@ public class ServicePerformedService {
     private static final String DATA_FILE = "services_performed.csv";
     private final CsvStorage csv;
 
+    /**
+     * Constructor por defecto que inicializa la lista y el acceso a CSV.
+     */
     public ServicePerformedService() {
         this.servicesPerformed = new ArrayList<>();
         this.csv = new CsvStorage(DATA_FILE);
@@ -28,6 +35,9 @@ public class ServicePerformedService {
         loadFromCsv();
     }
 
+    /**
+     * Carga el contenido de services_performed.csv y construye objetos ServicePerformed.
+     */
     private void loadFromCsv() {
         List<String> lines = csv.readAllLines();
         servicesPerformed.clear();
@@ -49,6 +59,9 @@ public class ServicePerformedService {
         }
     }
 
+    /**
+     * Serializa la lista de servicios realizados a services_performed.csv.
+     */
     private void saveToCsv() {
         List<String> lines = new ArrayList<>();
         lines.add("code,name,description,hours,hourlyRate");
@@ -66,6 +79,8 @@ public class ServicePerformedService {
 
     /**
      * Agrega un servicio realizado si su código no existe.
+     * @param service servicio a agregar
+     * @return true si se agregó; false si es nulo o ya existe el código
      */
     public boolean addService(ServicePerformed service) {
         if (service == null || service.getCode() == null) {
@@ -82,6 +97,7 @@ public class ServicePerformedService {
 
     /**
      * Lista todos los servicios realizados.
+     * @return lista en memoria de servicios
      */
     public List<ServicePerformed> listAll() {
         return servicesPerformed;
@@ -89,6 +105,8 @@ public class ServicePerformedService {
 
     /**
      * Busca un servicio realizado por código.
+     * @param code código del servicio
+     * @return servicio encontrado o null
      */
     public ServicePerformed findByCode(String code) {
         if (code == null) {
@@ -104,6 +122,9 @@ public class ServicePerformedService {
 
     /**
      * Actualiza un servicio realizado por código (no cambia el código).
+     * @param code código a localizar
+     * @param updated datos nuevos
+     * @return servicio actualizado o null si no existe
      */
     public ServicePerformed updateService(String code, ServicePerformed updated) {
         if (code == null || updated == null) {
@@ -124,6 +145,8 @@ public class ServicePerformedService {
 
     /**
      * Elimina un servicio realizado por código.
+     * @param code código a eliminar
+     * @return true si se eliminó; false en caso contrario
      */
     public boolean deleteByCode(String code) {
         if (code == null) {

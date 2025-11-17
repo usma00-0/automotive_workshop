@@ -5,8 +5,12 @@ import lombok.EqualsAndHashCode;
 import java.util.List;
 
 /**
- * Represents a client in the automotive workshop system.
- * Extends the base Person class.
+ * Representa a un cliente del taller automotriz.
+ * Extiende de {@link Person} para heredar datos comunes (id, nombre, contacto, dirección).
+ * Atributos propios:
+ * - clientId: identificador lógico del cliente usado en CSV y relaciones.
+ * - active: indica si el cliente está activo.
+ * - vehicles: lista de vehículos asociados al cliente.
  */
 @Data
 @EqualsAndHashCode(callSuper = true)

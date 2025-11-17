@@ -10,8 +10,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Servicio en memoria para gestionar Client con una lista interna.
- * Lógica simple y didáctica usando for-each e if.
+ * Servicio de negocio para gestionar clientes (Client) usando una lista en memoria.
+ *
+ * Responsabilidades:
+ * - Cargar/guardar clientes desde/hacia CSV.
+ * - Exponer operaciones CRUD con ciclos simples (for/for-each) y validaciones básicas.
  */
 @Service
 public class ClientService {
@@ -21,7 +24,7 @@ public class ClientService {
     private final CsvStorage csv;
 
     /**
-     * Constructor por defecto que inicializa la lista.
+     * Constructor por defecto que inicializa la lista y el acceso a CSV.
      */
     public ClientService() {
         this.clients = new ArrayList<>();
@@ -33,6 +36,10 @@ public class ClientService {
         loadFromCsv();
     }
 
+    /**
+     * Carga el contenido de clients.csv a memoria.
+     * Convierte cada línea en un objeto Client, incluyendo su Address (record).
+     */
     private void loadFromCsv() {
         List<String> lines = csv.readAllLines();
         clients.clear();
@@ -65,6 +72,9 @@ public class ClientService {
         }
     }
 
+    /**
+     * Serializa los clientes en memoria y persiste en clients.csv.
+     */
     private void saveToCsv() {
         List<String> lines = new ArrayList<>();
         lines.add("clientId,id,name,email,phone,street,city,state,postalCode,country,active");
@@ -112,6 +122,7 @@ public class ClientService {
 
     /**
      * Lista todos los clientes.
+     * @return lista de clientes en memoria
      */
     public List<Client> listAll() {
         return clients;
@@ -119,6 +130,8 @@ public class ClientService {
 
     /**
      * Busca un cliente por su clientId recorriendo la lista.
+     * @param id clientId a buscar
+     * @return cliente encontrado o null si no existe
      */
     public Client findById(String id) {
         if (id == null) {
@@ -134,6 +147,9 @@ public class ClientService {
 
     /**
      * Actualiza los datos de un cliente identificado por clientId.
+     * @param id clientId a localizar
+     * @param updated nuevos datos
+     * @return cliente actualizado o null si no existe
      */
     public Client updateClient(String id, Client updated) {
         if (id == null || updated == null) {
@@ -158,6 +174,8 @@ public class ClientService {
 
     /**
      * Elimina un cliente por clientId recorriendo la lista.
+     * @param id clientId a eliminar
+     * @return true si se eliminó; false si no existía
      */
     public boolean deleteById(String id) {
         if (id == null) {

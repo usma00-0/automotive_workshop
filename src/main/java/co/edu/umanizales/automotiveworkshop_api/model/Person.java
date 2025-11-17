@@ -5,8 +5,9 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
- * Base class representing a person in the system.
- * Follows the inheritance requirement where Client, Employee, and Technician will extend this class.
+ * Clase base que representa a una persona en el sistema.
+ * Cumple el requerimiento de herencia: {@link Client}, {@link Employee} y {@link Technician}
+ * extienden de esta clase para reutilizar atributos comunes.
  */
 @Data
 @NoArgsConstructor

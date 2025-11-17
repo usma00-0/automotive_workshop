@@ -8,7 +8,14 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 /**
- * Controlador REST simple para OrderService.
+ * Controlador REST para gestionar órdenes de servicio (OrderService).
+ *
+ * Endpoints expuestos (todos bajo /api/v1/orders):
+ * - GET    /            -> lista todas las órdenes (ya hidratadas en el Service)
+ * - GET    /{id}        -> obtiene una orden por id
+ * - POST   /            -> crea una nueva orden
+ * - PUT    /{id}        -> actualiza una orden existente (sin cambiar su id)
+ * - DELETE /{id}        -> elimina una orden por id
  */
 @RestController
 @RequestMapping("/api/v1/orders")
@@ -23,6 +30,7 @@ public class OrderController {
 
     /**
      * Lista todas las órdenes.
+     * GET /api/v1/orders
      */
     @GetMapping
     public List<OrderService> listAll() {
@@ -31,6 +39,7 @@ public class OrderController {
 
     /**
      * Busca una orden por id.
+     * GET /api/v1/orders/{id}
      */
     @GetMapping("/{id}")
     public OrderService findById(@PathVariable String id) {
@@ -39,6 +48,7 @@ public class OrderController {
 
     /**
      * Crea una nueva orden.
+     * POST /api/v1/orders
      */
     @PostMapping
     public String addOrder(@RequestBody OrderService order) {
@@ -52,6 +62,7 @@ public class OrderController {
 
     /**
      * Actualiza una orden por id.
+     * PUT /api/v1/orders/{id}
      */
     @PutMapping("/{id}")
     public OrderService updateOrder(@PathVariable String id, @RequestBody OrderService order) {
@@ -60,6 +71,7 @@ public class OrderController {
 
     /**
      * Elimina una orden por id.
+     * DELETE /api/v1/orders/{id}
      */
     @DeleteMapping("/{id}")
     public String deleteOrder(@PathVariable String id) {

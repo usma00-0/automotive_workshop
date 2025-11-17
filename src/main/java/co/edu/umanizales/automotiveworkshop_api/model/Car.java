@@ -4,8 +4,8 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 /**
- * Represents a car in the workshop domain.
- * Extends the base Vehicle class and adds car-specific attributes.
+ * Representa un carro (automóvil) y extiende de {@link Vehicle}.
+ * Aporta atributos adicionales como número de puertas y tipo de combustible.
  */
 @Data
 @EqualsAndHashCode(callSuper = true)

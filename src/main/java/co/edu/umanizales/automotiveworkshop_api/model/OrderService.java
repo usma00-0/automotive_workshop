@@ -8,6 +8,12 @@ import lombok.NoArgsConstructor;
 import java.time.LocalDateTime;
 import java.util.List;
 
+/**
+ * Representa una orden de servicio del taller.
+ * Contiene las referencias al cliente, vehículo y mecánico que atiende,
+ * además de los repuestos y servicios realizados. Expone métodos de ayuda
+ * para calcular totales de repuestos, servicios y el total general.
+ */
 @Data
 @Builder
 @NoArgsConstructor
@@ -23,6 +29,10 @@ public class OrderService {
     private List<ServicePerformed> services;
     private String notes;
 
+    /**
+     * Calcula el total de repuestos (cantidad x precio unitario).
+     * @return suma de subtotales de cada repuesto
+     */
     public double getTotalParts() {
         if (parts == null) {
             return 0d;
@@ -36,6 +46,10 @@ public class OrderService {
         return total;
     }
 
+    /**
+     * Calcula el total de servicios (horas x tarifa).
+     * @return suma de subtotales de cada servicio
+     */
     public double getTotalServices() {
         if (services == null) {
             return 0d;
@@ -49,6 +63,9 @@ public class OrderService {
         return total;
     }
 
+    /**
+     * Total general de la orden: repuestos + servicios.
+     */
     public double getTotal() {
         return getTotalParts() + getTotalServices();
     }

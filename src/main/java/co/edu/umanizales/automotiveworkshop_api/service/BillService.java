@@ -12,7 +12,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Servicio simple en memoria para Bill.
+ * Servicio de negocio para gestionar facturas (Bill).
+ *
+ * Responsabilidades:
+ * - Cargar/guardar facturas en CSV usando una lista en memoria como almacén temporal.
+ * - Exponer operaciones CRUD.
+ * - Hidratación: al consultar, completa el objeto OrderService asociado a partir del id.
  */
 @Service
 public class BillService {
@@ -33,6 +38,11 @@ public class BillService {
         loadFromCsv();
     }
 
+    /**
+     * Carga el contenido de bills.csv y crea instancias mínimas de Bill.
+     * La relación con OrderService se almacena como un objeto con solo el id
+     * para luego ser hidratado en tiempo de lectura.
+     */
     private void loadFromCsv() {
         List<String> lines = csv.readAllLines();
         bills.clear();
@@ -65,6 +75,10 @@ public class BillService {
         }
     }
 
+    /**
+     * Serializa las facturas y persiste en CSV.
+     * Se guarda únicamente el id de la orden asociada para evitar duplicar datos.
+     */
     private void saveToCsv() {
         List<String> lines = new ArrayList<>();
         lines.add("id,orderId,issuedAt,subtotalParts,subtotalServices,taxes,total,paymentType");
@@ -88,6 +102,11 @@ public class BillService {
         csv.writeAllLines(lines);
     }
 
+    /**
+     * Hidrata la factura completando la orden asociada usando el servicio de órdenes.
+     * @param b factura a hidratar
+     * @return factura con su orden completa si existe
+     */
     private Bill hydrate(Bill b) {
         if (b == null) { return null; }
         if (b.getOrder() != null && b.getOrder().getId() != null) {
@@ -99,6 +118,8 @@ public class BillService {
 
     /**
      * Agrega una factura si su id no existe.
+     * @param bill factura a agregar (id único y no nulo)
+     * @return true si se agregó; false si es nula o ya existe el id
      */
     public boolean addBill(Bill bill) {
         if (bill == null || bill.getId() == null) {
@@ -114,7 +135,8 @@ public class BillService {
     }
 
     /**
-     * Lista todas las facturas.
+     * Lista todas las facturas hidratadas.
+     * @return lista de facturas con su orden completa cuando aplica
      */
     public List<Bill> listAll() {
         List<Bill> result = new ArrayList<>();
@@ -125,7 +147,9 @@ public class BillService {
     }
 
     /**
-     * Busca una factura por id.
+     * Busca una factura por id y la retorna hidratada.
+     * @param id identificador de la factura
+     * @return factura encontrada o null
      */
     public Bill findById(String id) {
         if (id == null) {
@@ -140,7 +164,10 @@ public class BillService {
     }
 
     /**
-     * Actualiza una factura por id.
+     * Actualiza una factura por id (no cambia el id).
+     * @param id identificador a localizar
+     * @param updated datos nuevos
+     * @return factura actualizada o null si no existe
      */
     public Bill updateBill(String id, Bill updated) {
         if (id == null || updated == null) {
@@ -163,7 +190,9 @@ public class BillService {
     }
 
     /**
-     * Elimina una factura por id.
+     * Elimina una factura por id si existe.
+     * @param id identificador a eliminar
+     * @return true si se eliminó, false en caso contrario
      */
     public boolean deleteById(String id) {
         if (id == null) {

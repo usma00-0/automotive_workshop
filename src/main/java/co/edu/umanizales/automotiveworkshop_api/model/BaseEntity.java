@@ -2,6 +2,10 @@ package co.edu.umanizales.automotiveworkshop_api.model;
 
 import java.time.LocalDateTime;
 
+/**
+ * Clase base con campos de auditoría simples (id, createdAt, updatedAt, active).
+ * Útil cuando se requiere reutilizar estos metadatos en distintas entidades.
+ */
 public abstract class BaseEntity {
     protected String id;
     protected LocalDateTime createdAt;
