@@ -1,1 +1,2 @@
 employeeId,id,name,email,phone,street,city,state,postalCode,country,position,salary,hireDate,active
+E001,P200,Luis Gomez,luis@example.com,3007654321,Av 5 #20-10,City,ST,00000,CO,SERVICE_ADVISOR,2500000.0,2024-01-15,true
