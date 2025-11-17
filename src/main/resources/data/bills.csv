@@ -1,0 +1,2 @@
+id,orderId,issuedAt,subtotalParts,subtotalServices,taxes,total,paymentType
+B001,ORD-001,2025-11-12T12:30,35000.0,105000.0,22400.0,162400.0,EFECTIVO

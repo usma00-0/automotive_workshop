@@ -24,10 +24,18 @@ public class OrderServiceService {
     private final List<OrderService> orders;
     private static final String DATA_FILE = "orders.csv";
     private final CsvStorage csv;
+    private final ClientService clientService;
+    private final VehicleService vehicleService;
+    private final MechanicService mechanicService;
 
-    public OrderServiceService() {
+    public OrderServiceService(ClientService clientService,
+                               VehicleService vehicleService,
+                               MechanicService mechanicService) {
         this.orders = new ArrayList<>();
         this.csv = new CsvStorage(DATA_FILE);
+        this.clientService = clientService;
+        this.vehicleService = vehicleService;
+        this.mechanicService = mechanicService;
     }
 
     @PostConstruct
@@ -157,6 +165,26 @@ public class OrderServiceService {
         csv.writeAllLines(lines);
     }
 
+    private OrderService hydrate(OrderService o) {
+        if (o == null) { return null; }
+        // Cliente completo
+        if (o.getClient() != null && o.getClient().getClientId() != null) {
+            Client full = clientService.findById(o.getClient().getClientId());
+            if (full != null) { o.setClient(full); }
+        }
+        // Vehículo completo
+        if (o.getVehicle() != null && o.getVehicle().getLicensePlate() != null) {
+            Vehicle fullV = vehicleService.findByPlate(o.getVehicle().getLicensePlate());
+            if (fullV != null) { o.setVehicle(fullV); }
+        }
+        // Mecánico completo
+        if (o.getTechnician() != null && o.getTechnician().getTechnicianId() != null) {
+            Mechanic fullM = mechanicService.findById(o.getTechnician().getTechnicianId());
+            if (fullM != null) { o.setTechnician(fullM); }
+        }
+        return o;
+    }
+
     /**
      * Agrega una orden si su id no existe.
      */
@@ -177,7 +205,11 @@ public class OrderServiceService {
      * Lista todas las órdenes de servicio.
      */
     public List<OrderService> listAll() {
-        return orders;
+        List<OrderService> result = new ArrayList<>();
+        for (OrderService o : orders) {
+            result.add(hydrate(o));
+        }
+        return result;
     }
 
     /**
@@ -189,7 +221,7 @@ public class OrderServiceService {
         }
         for (OrderService o : orders) {
             if (id.equalsIgnoreCase(o.getId())) {
-                return o;
+                return hydrate(o);
             }
         }
         return null;

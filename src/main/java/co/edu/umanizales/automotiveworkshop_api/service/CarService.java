@@ -22,13 +22,15 @@ public class CarService {
     private final List<Car> cars;
     private static final String DATA_FILE = "cars.csv";
     private final CsvStorage csv;
+    private final ClientService clientService;
 
     /**
      * Constructor por defecto que inicializa la lista.
      */
-    public CarService() {
+    public CarService(ClientService clientService) {
         this.cars = new ArrayList<>();
         this.csv = new CsvStorage(DATA_FILE);
+        this.clientService = clientService;
     }
 
     @PostConstruct
@@ -107,6 +109,15 @@ public class CarService {
         csv.writeAllLines(lines);
     }
 
+    private Car hydrate(Car c) {
+        if (c == null) { return null; }
+        if (c.getOwner() != null && c.getOwner().getClientId() != null) {
+            Client full = clientService.findById(c.getOwner().getClientId());
+            if (full != null) { c.setOwner(full); }
+        }
+        return c;
+    }
+
     /**
      * Agrega un carro si su placa no existe aún.
      * @param car carro a agregar
@@ -130,7 +141,11 @@ public class CarService {
      * @return lista de carros
      */
     public List<Car> listAll() {
-        return cars;
+        List<Car> result = new ArrayList<>();
+        for (Car c : cars) {
+            result.add(hydrate(c));
+        }
+        return result;
     }
 
     /**
@@ -144,7 +159,7 @@ public class CarService {
         }
         for (Car c : cars) {
             if (plate.equalsIgnoreCase(c.getLicensePlate())) {
-                return c;
+                return hydrate(c);
             }
         }
         return null;

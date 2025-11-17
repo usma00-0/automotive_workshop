@@ -20,10 +20,12 @@ public class BillService {
     private final List<Bill> bills;
     private static final String DATA_FILE = "bills.csv";
     private final CsvStorage csv;
+    private final OrderServiceService orderServiceService;
 
-    public BillService() {
+    public BillService(OrderServiceService orderServiceService) {
         this.bills = new ArrayList<>();
         this.csv = new CsvStorage(DATA_FILE);
+        this.orderServiceService = orderServiceService;
     }
 
     @PostConstruct
@@ -86,6 +88,15 @@ public class BillService {
         csv.writeAllLines(lines);
     }
 
+    private Bill hydrate(Bill b) {
+        if (b == null) { return null; }
+        if (b.getOrder() != null && b.getOrder().getId() != null) {
+            OrderService full = orderServiceService.findById(b.getOrder().getId());
+            if (full != null) { b.setOrder(full); }
+        }
+        return b;
+    }
+
     /**
      * Agrega una factura si su id no existe.
      */
@@ -106,7 +117,11 @@ public class BillService {
      * Lista todas las facturas.
      */
     public List<Bill> listAll() {
-        return bills;
+        List<Bill> result = new ArrayList<>();
+        for (Bill b : bills) {
+            result.add(hydrate(b));
+        }
+        return result;
     }
 
     /**
@@ -118,7 +133,7 @@ public class BillService {
         }
         for (Bill b : bills) {
             if (id.equalsIgnoreCase(b.getId())) {
-                return b;
+                return hydrate(b);
             }
         }
         return null;

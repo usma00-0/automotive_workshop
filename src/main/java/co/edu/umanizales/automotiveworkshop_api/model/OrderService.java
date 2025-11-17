@@ -16,7 +16,7 @@ public class OrderService {
     private String id;
     private Client client; // aggregation to Client
     private Vehicle vehicle; // aggregation to Vehicle
-    private Technician technician; // aggregation to Technician
+    private Mechanic technician; // use concrete type to enable JSON deserialization
     private LocalDateTime createdAt;
     private ServiceStatus status; // e.g., PENDING, IN_PROGRESS, COMPLETED
     private List<Replacement> parts;

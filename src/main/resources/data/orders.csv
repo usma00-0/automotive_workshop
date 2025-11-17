@@ -1,0 +1,2 @@
+id,clientId,vehiclePlate,technicianId,createdAt,status,parts,services,notes
+ORD-001,C001,IGQ342,T001,2025-11-12T10:00:23,PENDING,R001:2:35000.0,S001:1.5:70000.0,Cliente espera en sala
