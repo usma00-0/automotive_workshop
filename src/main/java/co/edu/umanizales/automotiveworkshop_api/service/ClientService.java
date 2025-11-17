@@ -1,6 +1,7 @@
 package co.edu.umanizales.automotiveworkshop_api.service;
 
 import co.edu.umanizales.automotiveworkshop_api.model.Client;
+import co.edu.umanizales.automotiveworkshop_api.model.Address;
 import co.edu.umanizales.automotiveworkshop_api.repository.CsvStorage;
 import jakarta.annotation.PostConstruct;
 import org.springframework.stereotype.Service;
@@ -48,7 +49,7 @@ public class ClientService {
                 continue;
             }
             String[] parts = trimmed.split(",", -1);
-            if (parts.length < 8) {
+            if (parts.length < 11) {
                 continue;
             }
             Client c = new Client();
@@ -57,26 +58,35 @@ public class ClientService {
             c.setName(parts[2]);
             c.setEmail(parts[3]);
             c.setPhone(parts[4]);
-            c.setAddress(parts[5]);
-            c.setActive("true".equalsIgnoreCase(parts[6]));
-            c.setVehicleInfo(parts[7]);
+            Address address = new Address(parts[5], parts[6], parts[7], parts[8], parts[9]);
+            c.setAddress(address);
+            c.setActive("true".equalsIgnoreCase(parts[10]));
             clients.add(c);
         }
     }
 
     private void saveToCsv() {
         List<String> lines = new ArrayList<>();
-        lines.add("clientId,id,name,email,phone,address,active,vehicleInfo");
+        lines.add("clientId,id,name,email,phone,street,city,state,postalCode,country,active");
         for (Client c : clients) {
             StringBuilder sb = new StringBuilder();
             sb.append(c.getClientId() == null ? "" : c.getClientId()).append(",")
               .append(c.getId() == null ? "" : c.getId()).append(",")
               .append(c.getName() == null ? "" : c.getName()).append(",")
               .append(c.getEmail() == null ? "" : c.getEmail()).append(",")
-              .append(c.getPhone() == null ? "" : c.getPhone()).append(",")
-              .append(c.getAddress() == null ? "" : c.getAddress()).append(",")
-              .append(c.isActive()).append(",")
-              .append(c.getVehicleInfo() == null ? "" : c.getVehicleInfo());
+              .append(c.getPhone() == null ? "" : c.getPhone()).append(",");
+            Address a = c.getAddress();
+            String street = a == null ? "" : a.street();
+            String city = a == null ? "" : a.city();
+            String state = a == null ? "" : a.state();
+            String postal = a == null ? "" : a.postalCode();
+            String country = a == null ? "" : a.country();
+            sb.append(street == null ? "" : street).append(",")
+              .append(city == null ? "" : city).append(",")
+              .append(state == null ? "" : state).append(",")
+              .append(postal == null ? "" : postal).append(",")
+              .append(country == null ? "" : country).append(",")
+              .append(c.isActive());
             lines.add(sb.toString());
         }
         csv.writeAllLines(lines);
@@ -139,7 +149,6 @@ public class ClientService {
                 c.setAddress(updated.getAddress());
                 // Específicos de Client
                 c.setActive(updated.isActive());
-                c.setVehicleInfo(updated.getVehicleInfo());
                 saveToCsv();
                 return c;
             }

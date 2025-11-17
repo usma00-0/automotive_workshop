@@ -1,6 +1,7 @@
 package co.edu.umanizales.automotiveworkshop_api.service;
 
 import co.edu.umanizales.automotiveworkshop_api.model.Bill;
+import co.edu.umanizales.automotiveworkshop_api.model.OrderService;
 import co.edu.umanizales.automotiveworkshop_api.model.PaymentType;
 import co.edu.umanizales.automotiveworkshop_api.repository.CsvStorage;
 import jakarta.annotation.PostConstruct;
@@ -43,7 +44,10 @@ public class BillService {
             if (parts.length < 8) { continue; }
             Bill b = new Bill();
             b.setId(parts[0]);
-            b.setOrderId(parts[1]);
+            // Map orderId to nested OrderService with only id
+            OrderService os = new OrderService();
+            os.setId(parts[1]);
+            b.setOrder(os);
             try { if (parts[2] != null && !parts[2].isEmpty()) { b.setIssuedAt(LocalDateTime.parse(parts[2])); } } catch (Exception e) { b.setIssuedAt(null); }
             try { b.setSubtotalParts(Double.parseDouble(parts[3])); } catch (Exception e) { b.setSubtotalParts(0); }
             try { b.setSubtotalServices(Double.parseDouble(parts[4])); } catch (Exception e) { b.setSubtotalServices(0); }
@@ -64,9 +68,13 @@ public class BillService {
         lines.add("id,orderId,issuedAt,subtotalParts,subtotalServices,taxes,total,paymentType");
         for (Bill b : bills) {
             String pt = b.getPaymentType() == null ? "" : b.getPaymentType().name();
+            String orderId = "";
+            if (b.getOrder() != null) {
+                orderId = b.getOrder().getId() == null ? "" : b.getOrder().getId();
+            }
             StringBuilder sb = new StringBuilder();
             sb.append(b.getId() == null ? "" : b.getId()).append(",")
-              .append(b.getOrderId() == null ? "" : b.getOrderId()).append(",")
+              .append(orderId).append(",")
               .append(b.getIssuedAt() == null ? "" : b.getIssuedAt().toString()).append(",")
               .append(b.getSubtotalParts()).append(",")
               .append(b.getSubtotalServices()).append(",")
@@ -125,7 +133,7 @@ public class BillService {
         }
         for (Bill b : bills) {
             if (id.equalsIgnoreCase(b.getId())) {
-                b.setOrderId(updated.getOrderId());
+                b.setOrder(updated.getOrder());
                 b.setIssuedAt(updated.getIssuedAt());
                 b.setSubtotalParts(updated.getSubtotalParts());
                 b.setSubtotalServices(updated.getSubtotalServices());

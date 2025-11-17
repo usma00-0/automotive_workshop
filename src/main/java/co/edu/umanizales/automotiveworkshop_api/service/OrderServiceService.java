@@ -3,6 +3,10 @@ package co.edu.umanizales.automotiveworkshop_api.service;
 import co.edu.umanizales.automotiveworkshop_api.model.OrderService;
 import co.edu.umanizales.automotiveworkshop_api.model.Replacement;
 import co.edu.umanizales.automotiveworkshop_api.model.ServicePerformed;
+import co.edu.umanizales.automotiveworkshop_api.model.Client;
+import co.edu.umanizales.automotiveworkshop_api.model.Vehicle;
+import co.edu.umanizales.automotiveworkshop_api.model.Mechanic;
+import co.edu.umanizales.automotiveworkshop_api.model.ServiceStatus;
 import co.edu.umanizales.automotiveworkshop_api.repository.CsvStorage;
 import jakarta.annotation.PostConstruct;
 import org.springframework.stereotype.Service;
@@ -44,11 +48,24 @@ public class OrderServiceService {
             if (parts.length < 9) { continue; }
             OrderService o = new OrderService();
             o.setId(parts[0]);
-            o.setClientId(parts[1]);
-            o.setVehiclePlate(parts[2]);
-            o.setTechnicianId(parts[3]);
+            // Create minimal nested references (by id/plate)
+            Client client = new Client();
+            client.setClientId(parts[1]);
+            o.setClient(client);
+            Vehicle vehicle = new Vehicle();
+            vehicle.setLicensePlate(parts[2]);
+            o.setVehicle(vehicle);
+            Mechanic tech = new Mechanic();
+            tech.setTechnicianId(parts[3]);
+            o.setTechnician(tech);
             try { if (parts[4] != null && !parts[4].isEmpty()) { o.setCreatedAt(LocalDateTime.parse(parts[4])); } } catch (Exception e) { o.setCreatedAt(null); }
-            o.setStatus(parts[5]);
+            // status enum
+            ServiceStatus st = null;
+            String stStr = parts[5];
+            if (stStr != null && !stStr.isEmpty()) {
+                try { st = ServiceStatus.valueOf(stStr.toUpperCase()); } catch (Exception e) { st = null; }
+            }
+            o.setStatus(st);
             // parts field: code:quantity:unitPrice joined by '|'
             List<Replacement> repList = new ArrayList<>();
             String partsSpec = parts[6];
@@ -119,12 +136,19 @@ public class OrderServiceService {
                 }
             }
             StringBuilder sb = new StringBuilder();
+            String clientId = "";
+            if (o.getClient() != null) { clientId = o.getClient().getClientId() == null ? "" : o.getClient().getClientId(); }
+            String vehiclePlate = "";
+            if (o.getVehicle() != null) { vehiclePlate = o.getVehicle().getLicensePlate() == null ? "" : o.getVehicle().getLicensePlate(); }
+            String technicianId = "";
+            if (o.getTechnician() != null) { technicianId = o.getTechnician().getTechnicianId() == null ? "" : o.getTechnician().getTechnicianId(); }
+            String statusName = o.getStatus() == null ? "" : o.getStatus().name();
             sb.append(o.getId() == null ? "" : o.getId()).append(",")
-              .append(o.getClientId() == null ? "" : o.getClientId()).append(",")
-              .append(o.getVehiclePlate() == null ? "" : o.getVehiclePlate()).append(",")
-              .append(o.getTechnicianId() == null ? "" : o.getTechnicianId()).append(",")
+              .append(clientId).append(",")
+              .append(vehiclePlate).append(",")
+              .append(technicianId).append(",")
               .append(o.getCreatedAt() == null ? "" : o.getCreatedAt().toString()).append(",")
-              .append(o.getStatus() == null ? "" : o.getStatus()).append(",")
+              .append(statusName).append(",")
               .append(partsJoined.toString()).append(",")
               .append(servJoined.toString()).append(",")
               .append(o.getNotes() == null ? "" : o.getNotes());
@@ -180,9 +204,9 @@ public class OrderServiceService {
         }
         for (OrderService o : orders) {
             if (id.equalsIgnoreCase(o.getId())) {
-                o.setClientId(updated.getClientId());
-                o.setVehiclePlate(updated.getVehiclePlate());
-                o.setTechnicianId(updated.getTechnicianId());
+                o.setClient(updated.getClient());
+                o.setVehicle(updated.getVehicle());
+                o.setTechnician(updated.getTechnician());
                 o.setCreatedAt(updated.getCreatedAt());
                 o.setStatus(updated.getStatus());
                 o.setParts(updated.getParts());

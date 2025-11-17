@@ -2,6 +2,8 @@ package co.edu.umanizales.automotiveworkshop_api.service;
 
 import co.edu.umanizales.automotiveworkshop_api.model.Vehicle;
 import co.edu.umanizales.automotiveworkshop_api.model.VehicleCategory;
+import co.edu.umanizales.automotiveworkshop_api.model.VehicleType;
+import co.edu.umanizales.automotiveworkshop_api.model.Client;
 import co.edu.umanizales.automotiveworkshop_api.repository.CsvStorage;
 import jakarta.annotation.PostConstruct;
 import org.springframework.stereotype.Service;
@@ -56,26 +58,44 @@ public class VehicleService {
             v.setBrand(parts[1]);
             try { v.setModelYear(Integer.parseInt(parts[2])); } catch (Exception e) { v.setModelYear(0); }
             v.setColor(parts[3]);
-            v.setOwnerId(parts[4]);
+            Client owner = new Client();
+            owner.setClientId(parts[4]);
+            v.setOwner(owner);
             v.setCategory(new VehicleCategory(parts[5], parts[6]));
+            if (parts.length > 7) {
+                String typeStr = parts[7];
+                if (typeStr != null && !typeStr.isEmpty()) {
+                    try {
+                        v.setType(VehicleType.valueOf(typeStr.toUpperCase()));
+                    } catch (Exception ex) {
+                        v.setType(null);
+                    }
+                }
+            }
             vehicles.add(v);
         }
     }
 
     private void saveToCsv() {
         List<String> lines = new ArrayList<>();
-        lines.add("licensePlate,brand,modelYear,color,ownerId,categoryName,categoryDescription");
+        lines.add("licensePlate,brand,modelYear,color,ownerClientId,categoryName,categoryDescription,type");
         for (Vehicle v : vehicles) {
             String catName = v.getCategory() == null ? "" : v.getCategory().name();
             String catDesc = v.getCategory() == null ? "" : v.getCategory().description();
+            String ownerClientId = "";
+            if (v.getOwner() != null) {
+                ownerClientId = v.getOwner().getClientId() == null ? "" : v.getOwner().getClientId();
+            }
+            String typeName = v.getType() == null ? "" : v.getType().name();
             StringBuilder sb = new StringBuilder();
             sb.append(v.getLicensePlate() == null ? "" : v.getLicensePlate()).append(",")
               .append(v.getBrand() == null ? "" : v.getBrand()).append(",")
               .append(v.getModelYear()).append(",")
               .append(v.getColor() == null ? "" : v.getColor()).append(",")
-              .append(v.getOwnerId() == null ? "" : v.getOwnerId()).append(",")
+              .append(ownerClientId).append(",")
               .append(catName == null ? "" : catName).append(",")
-              .append(catDesc == null ? "" : catDesc);
+              .append(catDesc == null ? "" : catDesc).append(",")
+              .append(typeName);
             lines.add(sb.toString());
         }
         csv.writeAllLines(lines);
@@ -133,8 +153,9 @@ public class VehicleService {
                 v.setBrand(updated.getBrand());
                 v.setModelYear(updated.getModelYear());
                 v.setColor(updated.getColor());
-                v.setOwnerId(updated.getOwnerId());
+                v.setOwner(updated.getOwner());
                 v.setCategory(updated.getCategory());
+                v.setType(updated.getType());
                 saveToCsv();
                 return v;
             }

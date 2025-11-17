@@ -2,6 +2,9 @@ package co.edu.umanizales.automotiveworkshop_api.service;
 
 import co.edu.umanizales.automotiveworkshop_api.model.Car;
 import co.edu.umanizales.automotiveworkshop_api.model.VehicleCategory;
+import co.edu.umanizales.automotiveworkshop_api.model.VehicleType;
+import co.edu.umanizales.automotiveworkshop_api.model.FuelType;
+import co.edu.umanizales.automotiveworkshop_api.model.Client;
 import co.edu.umanizales.automotiveworkshop_api.repository.CsvStorage;
 import jakarta.annotation.PostConstruct;
 import org.springframework.stereotype.Service;
@@ -57,30 +60,48 @@ public class CarService {
             c.setBrand(parts[1]);
             try { c.setModelYear(Integer.parseInt(parts[2])); } catch (Exception e) { c.setModelYear(0); }
             c.setColor(parts[3]);
-            c.setOwnerId(parts[4]);
+            Client owner = new Client();
+            owner.setClientId(parts[4]);
+            c.setOwner(owner);
             c.setCategory(new VehicleCategory(parts[5], parts[6]));
             try { c.setNumberOfDoors(Integer.parseInt(parts[7])); } catch (Exception e) { c.setNumberOfDoors(0); }
-            c.setFuelType(parts[8]);
+            String fuelStr = parts[8];
+            if (fuelStr != null && !fuelStr.isEmpty()) {
+                try { c.setFuelType(FuelType.valueOf(fuelStr.toUpperCase())); } catch (Exception e) { c.setFuelType(null); }
+            }
+            if (parts.length > 9) {
+                String typeStr = parts[9];
+                if (typeStr != null && !typeStr.isEmpty()) {
+                    try { c.setType(VehicleType.valueOf(typeStr.toUpperCase())); } catch (Exception e) { c.setType(null); }
+                }
+            }
             cars.add(c);
         }
     }
 
     private void saveToCsv() {
         List<String> lines = new ArrayList<>();
-        lines.add("licensePlate,brand,modelYear,color,ownerId,categoryName,categoryDescription,numberOfDoors,fuelType");
+        lines.add("licensePlate,brand,modelYear,color,ownerClientId,categoryName,categoryDescription,numberOfDoors,fuelType,type");
         for (Car c : cars) {
             String catName = c.getCategory() == null ? "" : c.getCategory().name();
             String catDesc = c.getCategory() == null ? "" : c.getCategory().description();
+            String ownerClientId = "";
+            if (c.getOwner() != null) {
+                ownerClientId = c.getOwner().getClientId() == null ? "" : c.getOwner().getClientId();
+            }
+            String fuel = c.getFuelType() == null ? "" : c.getFuelType().name();
+            String type = c.getType() == null ? "" : c.getType().name();
             StringBuilder sb = new StringBuilder();
             sb.append(c.getLicensePlate() == null ? "" : c.getLicensePlate()).append(",")
               .append(c.getBrand() == null ? "" : c.getBrand()).append(",")
               .append(c.getModelYear()).append(",")
               .append(c.getColor() == null ? "" : c.getColor()).append(",")
-              .append(c.getOwnerId() == null ? "" : c.getOwnerId()).append(",")
+              .append(ownerClientId).append(",")
               .append(catName == null ? "" : catName).append(",")
               .append(catDesc == null ? "" : catDesc).append(",")
               .append(c.getNumberOfDoors()).append(",")
-              .append(c.getFuelType() == null ? "" : c.getFuelType());
+              .append(fuel).append(",")
+              .append(type);
             lines.add(sb.toString());
         }
         csv.writeAllLines(lines);
@@ -145,10 +166,11 @@ public class CarService {
                 c.setBrand(updated.getBrand());
                 c.setModelYear(updated.getModelYear());
                 c.setColor(updated.getColor());
-                c.setOwnerId(updated.getOwnerId());
+                c.setOwner(updated.getOwner());
                 c.setCategory(updated.getCategory());
                 c.setNumberOfDoors(updated.getNumberOfDoors());
                 c.setFuelType(updated.getFuelType());
+                c.setType(updated.getType());
                 saveToCsv();
                 return c;
             }

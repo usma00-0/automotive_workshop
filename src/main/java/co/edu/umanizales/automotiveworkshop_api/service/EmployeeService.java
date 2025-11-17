@@ -1,6 +1,8 @@
 package co.edu.umanizales.automotiveworkshop_api.service;
 
 import co.edu.umanizales.automotiveworkshop_api.model.Employee;
+import co.edu.umanizales.automotiveworkshop_api.model.Address;
+import co.edu.umanizales.automotiveworkshop_api.model.JobPosition;
 import co.edu.umanizales.automotiveworkshop_api.repository.CsvStorage;
 import jakarta.annotation.PostConstruct;
 import org.springframework.stereotype.Service;
@@ -48,7 +50,8 @@ public class EmployeeService {
                 continue;
             }
             String[] parts = trimmed.split(",", -1);
-            if (parts.length < 10) {
+            // employeeId,id,name,email,phone,street,city,state,postalCode,country,position,salary,hireDate,active
+            if (parts.length < 14) {
                 continue;
             }
             Employee e = new Employee();
@@ -57,31 +60,48 @@ public class EmployeeService {
             e.setName(parts[2]);
             e.setEmail(parts[3]);
             e.setPhone(parts[4]);
-            e.setAddress(parts[5]);
-            e.setPosition(parts[6]);
-            try { e.setSalary(Double.parseDouble(parts[7])); } catch (Exception ex) { e.setSalary(0); }
+            Address address = new Address(parts[5], parts[6], parts[7], parts[8], parts[9]);
+            e.setAddress(address);
+            JobPosition pos = null;
+            String posStr = parts[10];
+            if (posStr != null && !posStr.isEmpty()) {
+                try { pos = JobPosition.valueOf(posStr.toUpperCase()); } catch (Exception ex) { pos = null; }
+            }
+            e.setPosition(pos);
+            try { e.setSalary(Double.parseDouble(parts[11])); } catch (Exception ex) { e.setSalary(0); }
             try {
-                if (parts[8] != null && !parts[8].isEmpty()) {
-                    e.setHireDate(LocalDate.parse(parts[8]));
+                if (parts[12] != null && !parts[12].isEmpty()) {
+                    e.setHireDate(LocalDate.parse(parts[12]));
                 }
             } catch (Exception ex) { e.setHireDate(null); }
-            e.setActive("true".equalsIgnoreCase(parts[9]));
+            e.setActive("true".equalsIgnoreCase(parts[13]));
             employees.add(e);
         }
     }
 
     private void saveToCsv() {
         List<String> lines = new ArrayList<>();
-        lines.add("employeeId,id,name,email,phone,address,position,salary,hireDate,active");
+        lines.add("employeeId,id,name,email,phone,street,city,state,postalCode,country,position,salary,hireDate,active");
         for (Employee e : employees) {
             StringBuilder sb = new StringBuilder();
             sb.append(e.getEmployeeId() == null ? "" : e.getEmployeeId()).append(",")
               .append(e.getId() == null ? "" : e.getId()).append(",")
               .append(e.getName() == null ? "" : e.getName()).append(",")
               .append(e.getEmail() == null ? "" : e.getEmail()).append(",")
-              .append(e.getPhone() == null ? "" : e.getPhone()).append(",")
-              .append(e.getAddress() == null ? "" : e.getAddress()).append(",")
-              .append(e.getPosition() == null ? "" : e.getPosition()).append(",")
+              .append(e.getPhone() == null ? "" : e.getPhone()).append(",");
+            Address a = e.getAddress();
+            String street = a == null ? "" : a.street();
+            String city = a == null ? "" : a.city();
+            String state = a == null ? "" : a.state();
+            String postal = a == null ? "" : a.postalCode();
+            String country = a == null ? "" : a.country();
+            String pos = e.getPosition() == null ? "" : e.getPosition().name();
+            sb.append(street == null ? "" : street).append(",")
+              .append(city == null ? "" : city).append(",")
+              .append(state == null ? "" : state).append(",")
+              .append(postal == null ? "" : postal).append(",")
+              .append(country == null ? "" : country).append(",")
+              .append(pos).append(",")
               .append(e.getSalary()).append(",")
               .append(e.getHireDate() == null ? "" : e.getHireDate().toString()).append(",")
               .append(e.isActive());
