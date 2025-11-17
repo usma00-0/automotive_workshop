@@ -2,6 +2,7 @@ package co.edu.umanizales.automotiveworkshop_api.controller;
 
 import co.edu.umanizales.automotiveworkshop_api.model.Mechanic;
 import co.edu.umanizales.automotiveworkshop_api.service.MechanicService;
+import co.edu.umanizales.automotiveworkshop_api.service.EmployeeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,10 +16,12 @@ import java.util.List;
 public class MechanicController {
 
     private final MechanicService mechanicService;
+    private final EmployeeService employeeService;
 
     @Autowired
-    public MechanicController(MechanicService mechanicService) {
+    public MechanicController(MechanicService mechanicService, EmployeeService employeeService) {
         this.mechanicService = mechanicService;
+        this.employeeService = employeeService;
     }
 
     /**
@@ -42,6 +45,15 @@ public class MechanicController {
      */
     @PostMapping
     public String addMechanic(@RequestBody Mechanic mechanic) {
+        if (mechanic != null && mechanic.getId() != null) {
+            List<co.edu.umanizales.automotiveworkshop_api.model.Employee> es = employeeService.listAll();
+            for (int i = 0; i < es.size(); i++) {
+                co.edu.umanizales.automotiveworkshop_api.model.Employee e = es.get(i);
+                if (e != null && e.getId() != null && mechanic.getId().equalsIgnoreCase(e.getId())) {
+                    return "Mechanic could not be added (person id already used by an employee)";
+                }
+            }
+        }
         boolean added = mechanicService.addMechanic(mechanic);
         if (added) {
             return "Mechanic added successfully";
@@ -55,6 +67,15 @@ public class MechanicController {
      */
     @PutMapping("/{id}")
     public Mechanic updateMechanic(@PathVariable String id, @RequestBody Mechanic mechanic) {
+        if (mechanic != null && mechanic.getId() != null) {
+            List<co.edu.umanizales.automotiveworkshop_api.model.Employee> es = employeeService.listAll();
+            for (int i = 0; i < es.size(); i++) {
+                co.edu.umanizales.automotiveworkshop_api.model.Employee e = es.get(i);
+                if (e != null && e.getId() != null && mechanic.getId().equalsIgnoreCase(e.getId())) {
+                    return null;
+                }
+            }
+        }
         return mechanicService.updateMechanic(id, mechanic);
     }
 

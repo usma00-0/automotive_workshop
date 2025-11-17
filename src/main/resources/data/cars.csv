@@ -1,4 +1,4 @@
-licensePlate,brand,modelYear,color,ownerId,categoryName,categoryDescription,numberOfDoors,fuelType
-ABC128,Renault,2027,Rojo,C001,Particular,Uso personal,4,gasolina
-ABC123,Renault,2027,Rojo,C001,Particular,Uso personal,4,gasolina
-ABC129,Renault,2027,Rojo,C001,Particular,Uso personal,4,gasolina
+licensePlate,brand,modelYear,color,ownerClientId,categoryName,categoryDescription,numberOfDoors,fuelType,type
+ABC129,Renault,2027,Rojo,C001,Particular,Uso personal,4,,
+ABC124,Honda,2026,Azul,C001,Particular,Uso personal,4,GASOLINE,SEDAN
+IGQ342,Fiat,2026,Blanco,C001,Particular,Uso personal,4,GASOLINE,SEDAN

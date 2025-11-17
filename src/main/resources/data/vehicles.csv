@@ -1,2 +1,3 @@
-licensePlate,brand,modelYear,color,ownerId,categoryName,categoryDescription
-XYZ987,Kia,2022,Negro,C002,Comercial,Uso de trabajo
+licensePlate,brand,modelYear,color,ownerClientId,categoryName,categoryDescription,type
+XYZ987,Kia,2022,Negro,C002,Comercial,Uso de trabajo,
+IGQ342,Fiat,2026,Blanco,C001,Particular,Uso personal,SEDAN

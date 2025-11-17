@@ -1,0 +1,2 @@
+clientId,id,name,email,phone,street,city,state,postalCode,country,active
+C001,P100,Ana Perez,ana@example.com,3001234567,Calle 10 #5-20,City,ST,00000,CO,true

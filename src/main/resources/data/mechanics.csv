@@ -1,0 +1,2 @@
+technicianId,id,name,email,phone,street,city,state,postalCode,country,specialty,specializations,experienceYears,available,hourlyRate
+T001,P300,Carlos Ruiz,carlos@example.com,3015555555,Calle 50 #30-10,City,ST,00000,CO,ENGINE,ENGINE_DIAGNOSTIC|BRAKE_SERVICE,5,true,80000.0
