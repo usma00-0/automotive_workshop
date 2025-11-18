@@ -39,10 +39,6 @@ public class CarController {
      * GET /api/v1/cars/find/{plate}
      */
     @GetMapping("/find/{plate}")
-    public Car findByPlate(@PathVariable String plate) {
-        return carService.findCarByPlate(plate);
-    }
-
     /**
      * Agrega un nuevo carro si su placa no existe todavía.
      * POST /api/v1/cars
